@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Student } from '@/types/student';
+import { ApiResponse } from '@/types/api';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -18,8 +19,8 @@ export default function StudentsPage() {
   const fetchStudents = async () => {
     try {
       const res = await fetch('/api/students');
-      const data = await res.json();
-      if (data.success) {
+      const data: ApiResponse<Student[]> = await res.json();
+      if (data.success && data.data) {
         setStudents(data.data);
       }
     } catch (error) {
@@ -52,7 +53,7 @@ export default function StudentsPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        const data = await res.json();
+        const data: ApiResponse<Student> = await res.json();
         if (data.success) {
           alert('更新成功！');
           setEditingId(null);
@@ -64,7 +65,7 @@ export default function StudentsPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        const data = await res.json();
+        const data: ApiResponse<Student> = await res.json();
         if (data.success) {
           alert('创建成功！');
         }
@@ -86,7 +87,7 @@ export default function StudentsPage() {
       const res = await fetch(`/api/students/${id}`, {
         method: 'DELETE',
       });
-      const data = await res.json();
+      const data: ApiResponse<Student> = await res.json();
       if (data.success) {
         alert('删除成功！');
         fetchStudents();
