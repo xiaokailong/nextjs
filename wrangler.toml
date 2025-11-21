@@ -4,4 +4,4 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "students-db"
-database_id = "YOUR_DATABASE_ID"
+database_id = "43d7dda4-8ee5-4918-933b-56eab744037c"
