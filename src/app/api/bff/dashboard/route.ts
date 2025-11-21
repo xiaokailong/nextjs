@@ -1,24 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { BFFService } from '@/lib/bffService';
+import { BFFServiceV2 } from '@/lib/bffServiceV2';
 import { setCorsHeaders } from '@/lib/cors';
-import { hasD1Database } from '@/lib/mockDatabase';
 
 export const runtime = 'edge';
 
-function getDB(req: NextRequest): D1Database | undefined {
-  if (!hasD1Database()) return undefined;
-  const env = process.env as any;
-  return env.DB;
-}
-
 /**
  * BFF API: 获取仪表板数据
- * 演示：一次请求聚合多个数据源
+ * 🔥 新架构：BFF 通过 HTTP 调用微服务 API，而不是直接查询数据库
+ * 演示：前端 1 次请求 → BFF 并行调用多个微服务 → 聚合返回
  */
 export async function GET(req: NextRequest) {
   try {
-    const db = getDB(req);
-    const bff = new BFFService(db);
+    // 使用新的 BFFServiceV2（通过 HTTP 调用微服务）
+    const bff = new BFFServiceV2();
     
     const dashboardData = await bff.getDashboardData();
     

@@ -1,0 +1,61 @@
+/**
+ * 模拟的班级微服务 API - 详情接口
+ */
+
+import { NextResponse } from 'next/server';
+import { D1ClassStore } from '@/lib/d1ClassStore';
+
+export const runtime = 'edge';
+
+/**
+ * GET /api/microservices/classes/[id]
+ * 获取单个班级详情（包含学生列表）
+ */
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const env = process.env as any;
+    const store = new D1ClassStore(env.DB);
+    
+    const classData = await store.getById(parseInt(params.id));
+
+    if (!classData) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Class not found',
+          metadata: {
+            service: 'class-service',
+            version: '1.0.0',
+          },
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: classData,
+      metadata: {
+        service: 'class-service',
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error('Class microservice error:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to fetch class',
+        metadata: {
+          service: 'class-service',
+          version: '1.0.0',
+        },
+      },
+      { status: 500 }
+    );
+  }
+}

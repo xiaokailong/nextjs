@@ -1,24 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { BFFService } from '@/lib/bffService';
+import { BFFServiceV2 } from '@/lib/bffServiceV2';
 import { setCorsHeaders } from '@/lib/cors';
-import { hasD1Database } from '@/lib/mockDatabase';
 
 export const runtime = 'edge';
 
-function getDB(req: NextRequest): D1Database | undefined {
-  if (!hasD1Database()) return undefined;
-  const env = process.env as any;
-  return env.DB;
-}
-
 /**
  * BFF API: 获取所有班级及其统计信息
+ * 🔥 新架构：BFF 通过 HTTP 调用微服务 API
  * 演示：数据聚合和计算
  */
 export async function GET(req: NextRequest) {
   try {
-    const db = getDB(req);
-    const bff = new BFFService(db);
+    const bff = new BFFServiceV2();
     
     const classesWithStats = await bff.getAllClassesWithStats();
     
