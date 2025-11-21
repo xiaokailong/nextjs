@@ -1,2 +1,7 @@
 name = "nextjs"
 compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "students-db"
+database_id = "YOUR_DATABASE_ID"
