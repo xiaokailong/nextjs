@@ -4,6 +4,7 @@
 
 import { NextResponse } from 'next/server';
 import { D1StudentStore } from '@/lib/d1StudentStore';
+import { memoryStudentStore } from '@/lib/mockDatabase';
 
 export const runtime = 'edge';
 
@@ -13,13 +14,20 @@ export const runtime = 'edge';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const env = process.env as any;
-    const store = new D1StudentStore(env.DB);
+    const hasD1 = env.DB !== undefined;
     
-    const student = await store.getById(parseInt(params.id));
+    let student;
+    if (hasD1) {
+      const store = new D1StudentStore(env.DB);
+      student = await store.getById(parseInt(id));
+    } else {
+      student = await memoryStudentStore.getById(parseInt(id));
+    }
 
     if (!student) {
       return NextResponse.json(

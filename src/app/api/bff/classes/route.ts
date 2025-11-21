@@ -11,7 +11,7 @@ export const runtime = 'edge';
  */
 export async function GET(req: NextRequest) {
   try {
-    const bff = new BFFServiceV2();
+    const bff = new BFFServiceV2(req.url);
     
     const classesWithStats = await bff.getAllClassesWithStats();
     

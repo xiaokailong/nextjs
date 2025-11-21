@@ -16,7 +16,7 @@ export async function GET(
   try {
     const { id: idStr } = await params;
     const id = parseInt(idStr);
-    const bff = new BFFServiceV2();
+    const bff = new BFFServiceV2(req.url);
     
     const classWithStats = await bff.getClassWithStats(id);
     

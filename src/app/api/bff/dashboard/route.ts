@@ -12,7 +12,8 @@ export const runtime = 'edge';
 export async function GET(req: NextRequest) {
   try {
     // 使用新的 BFFServiceV2（通过 HTTP 调用微服务）
-    const bff = new BFFServiceV2();
+    // 传入 request URL 以支持 Edge Runtime
+    const bff = new BFFServiceV2(req.url);
     
     const dashboardData = await bff.getDashboardData();
     

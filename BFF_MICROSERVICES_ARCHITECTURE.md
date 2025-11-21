@@ -364,24 +364,71 @@ spec:
 
 ## 🧪 如何测试
 
-1. **启动开发服务器**：
+### 本地开发环境
+
+1. **确保环境变量已配置**：
+```bash
+# 检查 .env.local 文件是否存在
+cat .env.local
+
+# 应该包含：
+# NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+2. **启动开发服务器**：
 ```bash
 pnpm dev
 ```
 
-2. **访问仪表板 API**（查看控制台日志）：
+3. **访问仪表板 API**（查看控制台日志）：
 ```bash
+# 浏览器访问
+http://localhost:3000/api/bff/dashboard
+
+# 或使用 curl
 curl http://localhost:3000/api/bff/dashboard
 ```
 
-3. **观察控制台输出**，你会看到：
+4. **观察控制台输出**，你会看到：
    - BFF 并行调用微服务的日志
    - 每个请求的耗时
    - 数据聚合的过程
 
-4. **对比调用方式**：
+5. **对比调用方式**：
    - 直接调用：`/api/microservices/students`（微服务原始 API）
    - BFF 调用：`/api/bff/dashboard`（聚合多个微服务）
+
+### 环境兼容性
+
+项目已配置为**自动适配**本地开发和生产环境：
+
+| 环境 | URL 解析方式 | 说明 |
+|------|------------|------|
+| **本地开发** | `http://localhost:3000` | 从 `.env.local` 读取 |
+| **Cloudflare** | 从 `Request.url` 提取 | Edge Runtime 自动处理 |
+| **Docker/K8s** | 内网服务名 | 如 `http://student-service:3001` |
+
+**关键代码**（自动环境检测）：
+```typescript
+// src/lib/bffServiceV2.ts
+private getBaseUrl(): string {
+  // 1. 浏览器环境
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  
+  // 2. 本地开发环境
+  if (process.env.NODE_ENV === 'development') {
+    return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  }
+  
+  // 3. 生产环境（从 Request 对象获取）
+  return '';
+}
+
+// Edge Runtime 调用时传入 request URL
+const bff = new BFFServiceV2(req.url);  // req.url = 完整的请求 URL
+```
 
 ## 📚 相关文档
 

@@ -5,6 +5,7 @@
 
 import { NextResponse } from 'next/server';
 import { D1ClassStore } from '@/lib/d1ClassStore';
+import { memoryClassStore } from '@/lib/mockDatabase';
 
 export const runtime = 'edge';
 
@@ -15,9 +16,15 @@ export const runtime = 'edge';
 export async function GET() {
   try {
     const env = process.env as any;
-    const store = new D1ClassStore(env.DB);
+    const hasD1 = env.DB !== undefined;
     
-    const classes = await store.getAll();
+    let classes;
+    if (hasD1) {
+      const store = new D1ClassStore(env.DB);
+      classes = await store.getAll();
+    } else {
+      classes = await memoryClassStore.getAll();
+    }
 
     // 模拟微服务返回的标准格式
     return NextResponse.json({

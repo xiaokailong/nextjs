@@ -14,15 +14,51 @@ class HttpClient {
   private baseUrl: string;
 
   constructor(baseUrl: string = '') {
-    // 在 Cloudflare Workers/Pages 中，使用相对路径调用同域的 API
-    // 在真实微服务架构中，这里会是内网服务地址
-    this.baseUrl = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
+    // 自动检测运行环境，获取正确的 base URL
+    this.baseUrl = baseUrl || this.getBaseUrl();
   }
 
-  async get<T>(url: string): Promise<T> {
-    const fullUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
+  /**
+   * 获取 base URL（兼容本地开发和生产环境）
+   */
+  private getBaseUrl(): string {
+    // 1. 浏览器环境
+    if (typeof window !== 'undefined') {
+      return window.location.origin;
+    }
     
-    console.log(`[BFF HTTP] GET ${fullUrl}`);
+    // 2. Edge Runtime（Cloudflare Workers/Next.js Edge）
+    // 从 Request 对象获取（通过全局注入）
+    if (typeof globalThis !== 'undefined' && (globalThis as any).__NEXT_REQUEST_URL__) {
+      return (globalThis as any).__NEXT_REQUEST_URL__;
+    }
+    
+    // 3. 本地开发环境
+    if (process.env.NODE_ENV === 'development') {
+      return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    }
+    
+    // 4. 生产环境（Cloudflare）
+    return process.env.NEXT_PUBLIC_APP_URL || '';
+  }
+
+  async get<T>(url: string, requestUrl?: string): Promise<T> {
+    // 如果传入了 requestUrl（从 Request 对象获取），使用它来构建完整 URL
+    let fullUrl: string;
+    
+    if (url.startsWith('http')) {
+      fullUrl = url;
+    } else if (requestUrl) {
+      // 从 Request URL 中提取 origin
+      const origin = new URL(requestUrl).origin;
+      fullUrl = `${origin}${url}`;
+    } else if (this.baseUrl) {
+      fullUrl = `${this.baseUrl}${url}`;
+    } else {
+      throw new Error(`Cannot construct full URL from: ${url}`);
+    }
+    
+    console.log(`[BFF HTTP] GET ${url}`);
     const startTime = Date.now();
     
     try {
@@ -33,7 +69,7 @@ class HttpClient {
       });
 
       const duration = Date.now() - startTime;
-      console.log(`[BFF HTTP] GET ${fullUrl} - ${response.status} (${duration}ms)`);
+      console.log(`[BFF HTTP] GET ${url} - ${response.status} (${duration}ms)`);
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -49,7 +85,7 @@ class HttpClient {
       throw new Error(data.error || 'Unknown error');
     } catch (error) {
       const duration = Date.now() - startTime;
-      console.error(`[BFF HTTP] GET ${fullUrl} - Error (${duration}ms):`, error);
+      console.error(`[BFF HTTP] GET ${url} - Error (${duration}ms):`, error);
       throw error;
     }
   }
@@ -60,9 +96,11 @@ class HttpClient {
  */
 export class BFFServiceV2 {
   private httpClient: HttpClient;
+  private requestUrl?: string;
 
-  constructor() {
+  constructor(requestUrl?: string) {
     this.httpClient = new HttpClient();
+    this.requestUrl = requestUrl;
   }
 
   /**
@@ -70,28 +108,28 @@ export class BFFServiceV2 {
    */
   private async fetchStudents(): Promise<Student[]> {
     // 关键：这里调用的是微服务 API，不是直接查数据库
-    return this.httpClient.get<Student[]>('/api/microservices/students');
+    return this.httpClient.get<Student[]>('/api/microservices/students', this.requestUrl);
   }
 
   /**
    * 调用学生微服务 - 获取单个学生
    */
   private async fetchStudent(id: number): Promise<Student> {
-    return this.httpClient.get<Student>(`/api/microservices/students/${id}`);
+    return this.httpClient.get<Student>(`/api/microservices/students/${id}`, this.requestUrl);
   }
 
   /**
    * 调用班级微服务 - 获取所有班级
    */
   private async fetchClasses() {
-    return this.httpClient.get('/api/microservices/classes');
+    return this.httpClient.get('/api/microservices/classes', this.requestUrl);
   }
 
   /**
    * 调用班级微服务 - 获取单个班级
    */
   private async fetchClass(id: number) {
-    return this.httpClient.get(`/api/microservices/classes/${id}`);
+    return this.httpClient.get(`/api/microservices/classes/${id}`, this.requestUrl);
   }
 
   /**

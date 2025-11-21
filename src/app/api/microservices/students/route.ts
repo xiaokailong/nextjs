@@ -6,6 +6,7 @@
 
 import { NextResponse } from 'next/server';
 import { D1StudentStore } from '@/lib/d1StudentStore';
+import { memoryStudentStore } from '@/lib/mockDatabase';
 
 export const runtime = 'edge';
 
@@ -16,9 +17,19 @@ export const runtime = 'edge';
 export async function GET(request: Request) {
   try {
     const env = process.env as any;
-    const store = new D1StudentStore(env.DB);
     
-    const students = await store.getAll();
+    // 检查是否有 D1 数据库（生产环境）
+    const hasD1 = env.DB !== undefined;
+    
+    let students;
+    if (hasD1) {
+      // 生产环境：使用 D1 数据库
+      const store = new D1StudentStore(env.DB);
+      students = await store.getAll();
+    } else {
+      // 本地开发：使用模拟数据
+      students = await memoryStudentStore.getAll();
+    }
 
     // 模拟微服务返回的标准格式
     return NextResponse.json({
