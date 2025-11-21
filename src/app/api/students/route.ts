@@ -3,6 +3,8 @@ import { CreateStudentInput } from '@/types/student';
 import { studentStore } from '@/lib/studentStore';
 import { setCorsHeaders, handleOptionsRequest } from '@/lib/cors';
 
+export const runtime = 'edge';
+
 // 处理 OPTIONS 预检请求
 export async function OPTIONS(req: NextRequest) {
   return handleOptionsRequest(req.headers.get('origin'));
