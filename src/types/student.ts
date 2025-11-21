@@ -4,8 +4,9 @@ export interface Student {
   age: number;
   grade: string;
   email?: string;
-  createdAt: Date;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
 }
 
-export type CreateStudentInput = Omit<Student, 'id' | 'createdAt'>;
+export type CreateStudentInput = Omit<Student, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateStudentInput = Partial<CreateStudentInput>;
