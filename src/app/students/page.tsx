@@ -224,7 +224,14 @@ export default function StudentsPage() {
                     {student.email || '-'}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {new Date(student.createdAt).toLocaleDateString('zh-CN')}
+                    {student.createdAt 
+                      ? new Date(student.createdAt).toLocaleDateString('zh-CN', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit'
+                        })
+                      : '-'
+                    }
                   </td>
                   <td className="px-6 py-4 text-sm space-x-2">
                     <button

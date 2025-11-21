@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CreateStudentInput } from '@/types/student';
 import { D1StudentStore } from '@/lib/d1StudentStore';
+import { memoryStudentStore } from '@/lib/mockDatabase';
 import { setCorsHeaders, handleOptionsRequest } from '@/lib/cors';
 
 export const runtime = 'edge';
-
-// 获取 D1 数据库实例
-function getDB(req: NextRequest): D1Database {
-  const env = process.env as any;
-  return env.DB;
-}
 
 // 处理 OPTIONS 预检请求
 export async function OPTIONS(req: NextRequest) {
@@ -19,10 +14,21 @@ export async function OPTIONS(req: NextRequest) {
 // GET /api/students - 获取所有学生
 export async function GET(req: NextRequest) {
   try {
-    const db = getDB(req);
-    const store = new D1StudentStore(db);
-    const students = await store.getAll();
-    const total = await store.count();
+    const env = process.env as any;
+    const hasD1 = env.DB !== undefined;
+    
+    let students, total;
+    
+    if (hasD1) {
+      // 生产环境：使用 D1 数据库
+      const store = new D1StudentStore(env.DB);
+      students = await store.getAll();
+      total = await store.count();
+    } else {
+      // 本地开发：使用模拟数据
+      students = await memoryStudentStore.getAll();
+      total = await memoryStudentStore.count();
+    }
     
     const response = NextResponse.json({
       success: true,
@@ -61,14 +67,27 @@ export async function POST(req: NextRequest) {
       return setCorsHeaders(response, req.headers.get('origin'));
     }
 
-    const db = getDB(req);
-    const store = new D1StudentStore(db);
-    const newStudent = await store.create({
-      name: body.name,
-      age: body.age,
-      grade: body.grade,
-      email: body.email,
-    });
+    const env = process.env as any;
+    const hasD1 = env.DB !== undefined;
+    
+    let newStudent;
+    
+    if (hasD1) {
+      const store = new D1StudentStore(env.DB);
+      newStudent = await store.create({
+        name: body.name,
+        age: body.age,
+        grade: body.grade,
+        email: body.email,
+      });
+    } else {
+      newStudent = await memoryStudentStore.create({
+        name: body.name,
+        age: body.age,
+        grade: body.grade,
+        email: body.email,
+      });
+    }
 
     const response = NextResponse.json(
       { success: true, data: newStudent },

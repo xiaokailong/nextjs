@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UpdateStudentInput } from '@/types/student';
 import { D1StudentStore } from '@/lib/d1StudentStore';
+import { memoryStudentStore } from '@/lib/mockDatabase';
 import { setCorsHeaders, handleOptionsRequest } from '@/lib/cors';
 
 export const runtime = 'edge';
-
-// 获取 D1 数据库实例
-function getDB(req: NextRequest): D1Database {
-  const env = process.env as any;
-  return env.DB;
-}
 
 // 处理 OPTIONS 预检请求
 export async function OPTIONS(req: NextRequest) {
@@ -24,9 +19,18 @@ export async function GET(
   try {
     const { id: idStr } = await params;
     const id = parseInt(idStr);
-    const db = getDB(req);
-    const store = new D1StudentStore(db);
-    const student = await store.getById(id);
+    
+    const env = process.env as any;
+    const hasD1 = env.DB !== undefined;
+    
+    let student;
+    
+    if (hasD1) {
+      const store = new D1StudentStore(env.DB);
+      student = await store.getById(id);
+    } else {
+      student = await memoryStudentStore.getById(id);
+    }
 
     if (!student) {
       const response = NextResponse.json(
@@ -66,9 +70,17 @@ export async function PUT(
       return setCorsHeaders(response, req.headers.get('origin'));
     }
 
-    const db = getDB(req);
-    const store = new D1StudentStore(db);
-    const updatedStudent = await store.update(id, body);
+    const env = process.env as any;
+    const hasD1 = env.DB !== undefined;
+    
+    let updatedStudent;
+    
+    if (hasD1) {
+      const store = new D1StudentStore(env.DB);
+      updatedStudent = await store.update(id, body);
+    } else {
+      updatedStudent = await memoryStudentStore.update(id, body);
+    }
 
     if (!updatedStudent) {
       const response = NextResponse.json(
@@ -100,9 +112,18 @@ export async function DELETE(
   try {
     const { id: idStr } = await params;
     const id = parseInt(idStr);
-    const db = getDB(req);
-    const store = new D1StudentStore(db);
-    const deletedStudent = await store.delete(id);
+    
+    const env = process.env as any;
+    const hasD1 = env.DB !== undefined;
+    
+    let deletedStudent;
+    
+    if (hasD1) {
+      const store = new D1StudentStore(env.DB);
+      deletedStudent = await store.delete(id);
+    } else {
+      deletedStudent = await memoryStudentStore.delete(id);
+    }
 
     if (!deletedStudent) {
       const response = NextResponse.json(

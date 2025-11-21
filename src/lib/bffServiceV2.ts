@@ -284,8 +284,19 @@ export class BFFServiceV2 {
           youngAdults: ageGroups.youngAdults.length,
           adults: ageGroups.adults.length,
         },
-        recentStudents: (allStudents as any[]).slice(0, 5),
-        classes: allClasses,
+        recentStudents: (allStudents as any[]).slice(0, 5).map(s => ({
+          id: s.id,
+          name: s.name,
+          age: s.age,
+          grade: s.grade,
+        })),
+        // ✅ 修复：将 teacher_name 映射为 teacherName
+        classes: (allClasses as any[]).map(c => ({
+          id: c.id,
+          name: c.name,
+          grade: c.grade,
+          teacherName: c.teacher_name || c.teacherName, // 兼容两种命名
+        })),
       };
 
       const duration = Date.now() - startTime;
