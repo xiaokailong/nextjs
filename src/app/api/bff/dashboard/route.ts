@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BFFServiceV2 } from '@/lib/bffServiceV2';
 import { setCorsHeaders } from '@/lib/cors';
 
-export const runtime = 'edge';
-
 /**
  * BFF API: 获取仪表板数据
  * 🔥 新架构：BFF 通过 HTTP 调用微服务 API，而不是直接查询数据库

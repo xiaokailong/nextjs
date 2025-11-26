@@ -6,8 +6,6 @@ import { NextResponse } from 'next/server';
 import { D1StudentStore } from '@/lib/d1StudentStore';
 import { memoryStudentStore } from '@/lib/mockDatabase';
 
-export const runtime = 'edge';
-
 /**
  * GET /api/microservices/students/[id]
  * 获取单个学生详情

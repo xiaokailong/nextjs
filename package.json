@@ -6,15 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate": "npx wrangler d1 execute students-db --remote --file=./migrations/0001_create_students.sql && npx wrangler d1 execute students-db --remote --file=./migrations/0002_add_classes.sql && npx wrangler d1 execute students-db --remote --file=./migrations/0003_create_interview_questions.sql",
+    "db:migrate:local": "npx wrangler d1 execute students-db --local --file=./migrations/0001_create_students.sql && npx wrangler d1 execute students-db --local --file=./migrations/0002_add_classes.sql && npx wrangler d1 execute students-db --local --file=./migrations/0003_create_interview_questions.sql",
+    "db:reset": "npx wrangler d1 execute students-db --remote --command=\"DROP TABLE IF EXISTS interview_questions; DROP TABLE IF EXISTS interview_categories; DROP TABLE IF EXISTS classes; DROP TABLE IF EXISTS students;\" && pnpm run db:migrate",
+    "deploy": "next build && npx wrangler pages deploy .next"
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",
     "@heroui/theme": "^2.4.23",
+    "@tiptap/extension-code-block-lowlight": "^3.11.0",
+    "@tiptap/extension-image": "^3.11.0",
+    "@tiptap/extension-youtube": "^3.11.0",
+    "@tiptap/react": "^3.11.0",
+    "@tiptap/starter-kit": "^3.11.0",
     "framer-motion": "^12.23.24",
+    "lowlight": "^3.3.0",
     "next": "16.0.3",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "react-hot-toast": "^2.6.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251121.0",

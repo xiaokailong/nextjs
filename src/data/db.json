@@ -1,0 +1,161 @@
+{
+  "interviews": {
+    "questions": [
+      {
+        "id": 1,
+        "title": "什么是闭包？闭包的应用场景有哪些？w",
+        "category": "javascript",
+        "difficulty": "medium",
+        "tags": [
+          "闭包",
+          "作用域",
+          "核心概念"
+        ],
+        "content": "闭包是 JavaScript 中的一个重要概念。请详细解释：\n1. 什么是闭包？\n2. 闭包的工作原理\n3. 闭包的常见应用场景\n4. 闭包可能带来的问题",
+        "answer": "<p>闭包是指函数能够访问其词法作用域外部的变量。 **工作原理：** 当函数嵌套时，内部函数可以访问外部函数的变量，即使外部函数已经执行完毕。 **应用场景：** 1. 数据私有化/模块化 2. 函数工厂 3. 回调函数和事件处理 4. 防抖节流 **示例代码：** ```javascript function createCounter() { let count = 0; return { increment: () =&gt; ++count, decrement: () =&gt; --count, getCount: () =&gt; count }; } ``` **注意事项：** 过度使用闭包可能导致内存泄漏，因为闭包会保持对外部变量的引用。</p>",
+        "createdAt": "2024-01-01",
+        "updatedAt": "2025-11-26T05:27:30.638Z"
+      },
+      {
+        "id": 2,
+        "title": "React Hooks 的使用规则和原理",
+        "category": "react",
+        "difficulty": "medium",
+        "tags": [
+          "Hooks",
+          "useState",
+          "useEffect"
+        ],
+        "content": "React Hooks 是 React 16.8 引入的新特性。请回答：\n1. Hooks 的使用规则\n2. useState 和 useEffect 的工作原理\n3. 为什么 Hooks 不能在条件语句中使用？",
+        "answer": "**Hooks 使用规则：**\n1. 只能在函数组件顶层调用\n2. 不能在循环、条件或嵌套函数中调用\n3. 只能在 React 函数组件或自定义 Hook 中调用\n\n**工作原理：**\nReact 使用链表结构按顺序存储 Hooks 状态，依赖调用顺序来匹配对应的状态。\n\n**示例：**\n```javascript\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  \n  useEffect(() => {\n    document.title = `Count: ${count}`;\n  }, [count]);\n  \n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}\n```\n\n**不能在条件语句中使用的原因：**\n因为 React 依赖 Hooks 的调用顺序来维护状态，条件调用会破坏这个顺序。",
+        "createdAt": "2024-01-02",
+        "updatedAt": "2024-01-02"
+      },
+      {
+        "id": 3,
+        "title": "CSS 盒模型详解",
+        "category": "css",
+        "difficulty": "easy",
+        "tags": [
+          "盒模型",
+          "box-sizing"
+        ],
+        "content": "请详细说明 CSS 盒模型，包括：\n1. 标准盒模型和 IE 盒模型的区别\n2. box-sizing 属性的作用\n3. 如何计算元素的实际宽度",
+        "answer": "**CSS 盒模型组成：**\ncontent（内容）、padding（内边距）、border（边框）、margin（外边距）\n\n**两种盒模型：**\n\n1. **标准盒模型** (content-box)\n   - width/height 只包含 content\n   - 实际宽度 = width + padding + border\n\n2. **IE 盒模型** (border-box)\n   - width/height 包含 content + padding + border\n   - 实际宽度 = width\n\n**box-sizing 属性：**\n```css\n/* 标准盒模型 */\n.box1 {\n  box-sizing: content-box;\n  width: 200px;\n  padding: 20px;\n  border: 5px solid;\n  /* 实际宽度: 200 + 40 + 10 = 250px */\n}\n\n/* IE 盒模型 */\n.box2 {\n  box-sizing: border-box;\n  width: 200px;\n  padding: 20px;\n  border: 5px solid;\n  /* 实际宽度: 200px */\n}\n```\n\n**推荐做法：**\n通常使用 `box-sizing: border-box` 更直观和易于计算。",
+        "createdAt": "2024-01-03",
+        "updatedAt": "2024-01-03"
+      },
+      {
+        "id": 4,
+        "title": "ssb",
+        "category": "react",
+        "difficulty": "medium",
+        "tags": [
+          "w"
+        ],
+        "content": "<p>wr</p>",
+        "answer": "<p>er</p>",
+        "createdAt": "2025-11-26T05:27:53.342Z",
+        "updatedAt": "2025-11-26T05:28:03.534Z"
+      }
+    ],
+    "categories": [
+      {
+        "id": "javascript",
+        "name": "JavaScript 基础",
+        "count": 1
+      },
+      {
+        "id": "react",
+        "name": "React",
+        "count": 2
+      },
+      {
+        "id": "vue",
+        "name": "Vue",
+        "count": 0
+      },
+      {
+        "id": "css",
+        "name": "CSS",
+        "count": 1
+      },
+      {
+        "id": "network",
+        "name": "网络协议",
+        "count": 0
+      },
+      {
+        "id": "performance",
+        "name": "性能优化",
+        "count": 0
+      },
+      {
+        "id": "algorithm",
+        "name": "算法与数据结构",
+        "count": 0
+      },
+      {
+        "id": "engineering",
+        "name": "工程化",
+        "count": 0
+      }
+    ],
+    "nextId": 5
+  },
+  "students": [
+    {
+      "id": 1,
+      "name": "张三",
+      "age": 18,
+      "grade": "高三",
+      "email": "zhangsan@example.com",
+      "createdAt": "2024-01-15",
+      "updatedAt": "2024-01-15"
+    },
+    {
+      "id": 2,
+      "name": "李四",
+      "age": 17,
+      "grade": "高二",
+      "email": "lisi@example.com",
+      "createdAt": "2024-02-20",
+      "updatedAt": "2024-02-20"
+    },
+    {
+      "id": 3,
+      "name": "王五",
+      "age": 16,
+      "grade": "高一",
+      "email": "wangwu@example.com",
+      "createdAt": "2024-03-10",
+      "updatedAt": "2024-03-10"
+    },
+    {
+      "id": 4,
+      "name": "ss",
+      "age": 13,
+      "grade": "14",
+      "createdAt": "2025-11-26T05:26:23.655Z",
+      "updatedAt": "2025-11-26T05:26:23.655Z"
+    }
+  ],
+  "classes": [
+    {
+      "id": 1,
+      "name": "一班",
+      "grade": "高三",
+      "teacherName": "王老师",
+      "createdAt": "2024-01-01",
+      "updatedAt": "2024-01-01"
+    },
+    {
+      "id": 2,
+      "name": "二班",
+      "grade": "高二",
+      "teacherName": "李老师",
+      "createdAt": "2024-01-01",
+      "updatedAt": "2024-01-01"
+    }
+  ]
+}

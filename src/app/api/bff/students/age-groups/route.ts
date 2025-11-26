@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BFFServiceV2 } from '@/lib/bffServiceV2';
 import { setCorsHeaders } from '@/lib/cors';
 
-export const runtime = 'edge';
-
 /**
  * BFF API: 按年龄分组获取学生
  * 🔥 新架构：BFF 调用微服务，然后进行数据转换
