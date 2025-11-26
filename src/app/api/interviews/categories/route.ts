@@ -1,13 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { D1InterviewStore } from '@/lib/d1InterviewStore';
 import { memoryInterviewStore } from '@/lib/mockDatabase';
 
 // GET /api/interviews/categories - 获取所有分类
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const env = process.env as any;
+    // @ts-ignore
+    const env = request.env || process.env as any;
 
-    if (env.INTERVIEW_DB) {
+    if (env?.INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
       const store = new D1InterviewStore(env.INTERVIEW_DB);
       const categories = await store.getAllCategories();

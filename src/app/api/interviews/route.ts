@@ -9,9 +9,11 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     
-    const env = process.env as any;
+    // 在 Cloudflare Workers 中，环境变量通过 request 对象传递
+    // @ts-ignore
+    const env = request.env || process.env as any;
     
-    if (env.INTERVIEW_DB) {
+    if (env?.INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
       const store = new D1InterviewStore(env.INTERVIEW_DB);
       
@@ -75,9 +77,10 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const env = process.env as any;
+    // @ts-ignore
+    const env = request.env || process.env as any;
     
-    if (env.INTERVIEW_DB) {
+    if (env?.INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
       const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.createQuestion({

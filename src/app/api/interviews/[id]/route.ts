@@ -98,9 +98,10 @@ export async function PUT(
     if (content !== undefined) updateData.content = content;
     if (answer !== undefined) updateData.answer = answer;
     
-    const env = process.env as any;
+    // @ts-ignore
+    const env = request.env || process.env as any;
     
-    if (env.INTERVIEW_DB) {
+    if (env?.INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
       const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.updateQuestion(id, updateData);
@@ -151,9 +152,10 @@ export async function DELETE(
       );
     }
     
-    const env = process.env as any;
+    // @ts-ignore
+    const env = request.env || process.env as any;
     
-    if (env.INTERVIEW_DB) {
+    if (env?.INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
       const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.deleteQuestion(id);
