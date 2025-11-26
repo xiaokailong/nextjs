@@ -21,13 +21,15 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     
-    // 在 Cloudflare Workers 中，环境变量通过 request 对象传递
-    // @ts-ignore
-    const env = request.env || process.env as any;
+    // Cloudflare Pages 环境下，D1 绑定通过特殊方式访问
+    // @ts-ignore - Cloudflare 特定属性
+    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
     
-    if (env?.INTERVIEW_DB) {
+    console.log('[Interview API] INTERVIEW_DB available:', !!INTERVIEW_DB);
+    
+    if (INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(env.INTERVIEW_DB);
+      const store = new D1InterviewStore(INTERVIEW_DB);
       
       if (search) {
         const questions = await store.searchQuestions(search);
@@ -89,12 +91,14 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // @ts-ignore
-    const env = request.env || process.env as any;
+    // @ts-ignore - Cloudflare 特定属性
+    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
     
-    if (env?.INTERVIEW_DB) {
+    console.log('[Interview API POST] INTERVIEW_DB available:', !!INTERVIEW_DB);
+    
+    if (INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(env.INTERVIEW_DB);
+      const store = new D1InterviewStore(INTERVIEW_DB);
       const question = await store.createQuestion({
         title,
         category,

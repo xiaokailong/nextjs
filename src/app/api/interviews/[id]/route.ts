@@ -18,11 +18,12 @@ export async function GET(
       );
     }
     
-    const env = process.env as any;
+    // @ts-ignore - Cloudflare 特定属性
+    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
     
-    if (env.INTERVIEW_DB) {
+    if (INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(env.INTERVIEW_DB);
+      const store = new D1InterviewStore(INTERVIEW_DB);
       const question = await store.getQuestionById(id);
       
       if (!question) {
@@ -152,12 +153,12 @@ export async function DELETE(
       );
     }
     
-    // @ts-ignore
-    const env = request.env || process.env as any;
+    // @ts-ignore - Cloudflare 特定属性
+    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
     
-    if (env?.INTERVIEW_DB) {
+    if (INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(env.INTERVIEW_DB);
+      const store = new D1InterviewStore(INTERVIEW_DB);
       const question = await store.deleteQuestion(id);
       
       if (!question) {
