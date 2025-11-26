@@ -15,6 +15,7 @@ import {
 } from '@heroui/react';
 import RichTextEditor from './RichTextEditor';
 import type { InterviewQuestion, InterviewCategory } from '@/types/interview';
+import { getAPIPath } from '@/config/api.config';
 
 interface QuestionFormModalProps {
   isOpen: boolean;
@@ -108,8 +109,8 @@ export default function QuestionFormModal({
 
     try {
       const url = question
-        ? `/api/interviews/${question.id}`
-        : '/api/interviews';
+        ? getAPIPath(`/api/interviews/${question.id}`)
+        : getAPIPath('/api/interviews');
       const method = question ? 'PUT' : 'POST';
 
       const response = await fetch(url, {

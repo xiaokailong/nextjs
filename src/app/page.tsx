@@ -16,6 +16,7 @@ import {
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import type { InterviewQuestion, InterviewCategory } from "@/types/interview";
+import { getAPIPath } from "@/config/api.config";
 
 export default function Home() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function Home() {
         setError(null);
         
         // Fetch categories
-        const categoriesRes = await fetch('/api/interviews/categories');
+        const categoriesRes = await fetch(getAPIPath('/api/interviews/categories'));
         if (!categoriesRes.ok) {
           throw new Error('Failed to fetch categories');
         }
@@ -48,7 +49,7 @@ export default function Home() {
         setExpandedCategories(new Set(categoriesData.map((c) => c.id)));
         
         // Fetch all questions
-        const questionsRes = await fetch('/api/interviews');
+        const questionsRes = await fetch(getAPIPath('/api/interviews'));
         if (!questionsRes.ok) {
           throw new Error('Failed to fetch questions');
         }

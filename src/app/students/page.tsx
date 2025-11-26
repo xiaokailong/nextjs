@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Student } from '@/types/student';
 import { ApiResponse } from '@/types/api';
+import { getAPIPath } from '@/config/api.config';
 import {
   Table,
   TableHeader,
@@ -34,7 +35,7 @@ export default function StudentsPage() {
   // 获取学生列表
   const fetchStudents = async () => {
     try {
-      const res = await fetch('/api/students');
+      const res = await fetch(getAPIPath('/api/students'));
       const data: ApiResponse<Student[]> = await res.json();
       if (data.success && data.data) {
         setStudents(data.data);
@@ -64,7 +65,7 @@ export default function StudentsPage() {
     try {
       if (editingId) {
         // 更新
-        const res = await fetch(`/api/students/${editingId}`, {
+        const res = await fetch(getAPIPath(`/api/students/${editingId}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -75,7 +76,7 @@ export default function StudentsPage() {
         }
       } else {
         // 创建
-        await fetch('/api/students', {
+        await fetch(getAPIPath('/api/students'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -92,7 +93,7 @@ export default function StudentsPage() {
   // 删除学生
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`/api/students/${id}`, {
+      const res = await fetch(getAPIPath(`/api/students/${id}`), {
         method: 'DELETE',
       });
       const data: ApiResponse<Student> = await res.json();

@@ -14,6 +14,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import QuestionFormModal from "@/components/QuestionFormModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 import type { InterviewQuestion, InterviewCategory } from "@/types/interview";
+import { getAPIPath } from "@/config/api.config";
 
 export default function AdminPage() {
   const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
@@ -32,8 +33,8 @@ export default function AdminPage() {
     try {
       setLoading(true);
       const [categoriesRes, questionsRes] = await Promise.all([
-        fetch('/api/interviews/categories'),
-        fetch('/api/interviews'),
+        fetch(getAPIPath('/api/interviews/categories')),
+        fetch(getAPIPath('/api/interviews')),
       ]);
 
       if (categoriesRes.ok) {
@@ -85,7 +86,7 @@ export default function AdminPage() {
 
     setDeleteLoading(true);
     try {
-      const response = await fetch(`/api/interviews/${selectedQuestion.id}`, {
+      const response = await fetch(getAPIPath(`/api/interviews/${selectedQuestion.id}`), {
         method: 'DELETE',
       });
 

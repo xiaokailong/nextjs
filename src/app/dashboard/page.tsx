@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ApiResponse } from '@/types/api';
+import { getAPIPath } from '@/config/api.config';
 import {
   Card,
   CardBody,
@@ -47,7 +48,7 @@ export default function DashboardPage() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await fetch('/api/bff/dashboard');
+      const res = await fetch(getAPIPath('/api/bff/dashboard'));
       const result: ApiResponse<DashboardData> = await res.json();
       if (result.success && result.data) {
         setData(result.data);
