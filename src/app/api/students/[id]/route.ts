@@ -4,6 +4,8 @@ import { D1StudentStore } from '@/lib/d1StudentStore';
 import { memoryStudentStore } from '@/lib/mockDatabase';
 import { setCorsHeaders, handleOptionsRequest } from '@/lib/cors';
 
+export const runtime = 'edge';
+
 // 处理 OPTIONS 预检请求
 export async function OPTIONS(req: NextRequest) {
   return handleOptionsRequest(req.headers.get('origin'));

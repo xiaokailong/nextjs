@@ -6,6 +6,8 @@ import { NextResponse } from 'next/server';
 import { D1ClassStore } from '@/lib/d1ClassStore';
 import { memoryClassStore } from '@/lib/mockDatabase';
 
+export const runtime = 'edge';
+
 /**
  * GET /api/microservices/classes/[id]
  * 获取单个班级详情（包含学生列表）

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { BFFServiceV2 } from '@/lib/bffServiceV2';
 import { setCorsHeaders } from '@/lib/cors';
 
+export const runtime = 'edge';
+
 /**
  * BFF API: 获取所有班级及其统计信息
  * 🔥 新架构：BFF 通过 HTTP 调用微服务 API
