@@ -23,26 +23,22 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 // GET /api/interviews - 获取所有面试题或按分类/搜索过滤
-export async function GET(
-  request: NextRequest,
-  context?: { cloudflare?: { env?: any } }
-) {
+export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     
-    // 从 Cloudflare context 中获取 INTERVIEW_DB
-    const env = context?.cloudflare?.env || process.env as any;
-    const INTERVIEW_DB = env?.INTERVIEW_DB;
+    const env = process.env as any;
+    const hasD1 = env.INTERVIEW_DB !== undefined;
     
-    console.log('[Interview API] INTERVIEW_DB available:', !!INTERVIEW_DB);
+    console.log('[Interview API] INTERVIEW_DB available:', hasD1);
     
     let questions;
     
-    if (INTERVIEW_DB) {
+    if (hasD1) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(INTERVIEW_DB);
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       
       if (search) {
         questions = await store.searchQuestions(search);
@@ -75,10 +71,7 @@ export async function GET(
 }
 
 // POST /api/interviews - 创建新面试题
-export async function POST(
-  request: NextRequest,
-  context?: { cloudflare?: { env?: any } }
-) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as any;
     const { title, category, difficulty, tags, content, answer } = body;
@@ -108,17 +101,16 @@ export async function POST(
       return setCorsHeaders(response, request.headers.get('origin'));
     }
     
-    // 从 Cloudflare context 中获取 INTERVIEW_DB
-    const env = context?.cloudflare?.env || process.env as any;
-    const INTERVIEW_DB = env?.INTERVIEW_DB;
+    const env = process.env as any;
+    const hasD1 = env.INTERVIEW_DB !== undefined;
     
-    console.log('[Interview API POST] INTERVIEW_DB available:', !!INTERVIEW_DB);
+    console.log('[Interview API POST] INTERVIEW_DB available:', hasD1);
     
     let question;
     
-    if (INTERVIEW_DB) {
+    if (hasD1) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(INTERVIEW_DB);
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       question = await store.createQuestion({
         title,
         category,

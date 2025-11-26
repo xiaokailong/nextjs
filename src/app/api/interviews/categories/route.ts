@@ -11,22 +11,18 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 // GET /api/interviews/categories - 获取所有分类
-export async function GET(
-  request: NextRequest,
-  context?: { cloudflare?: { env?: any } }
-) {
+export async function GET(request: NextRequest) {
   try {
-    // 从 Cloudflare context 中获取 INTERVIEW_DB
-    const env = context?.cloudflare?.env || process.env as any;
-    const INTERVIEW_DB = env?.INTERVIEW_DB;
+    const env = process.env as any;
+    const hasD1 = env.INTERVIEW_DB !== undefined;
 
-    console.log('[Categories API] INTERVIEW_DB available:', !!INTERVIEW_DB);
+    console.log('[Categories API] INTERVIEW_DB available:', hasD1);
 
     let categories;
 
-    if (INTERVIEW_DB) {
+    if (hasD1) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(INTERVIEW_DB);
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       categories = await store.getAllCategories();
     } else {
       // Development: Use mock data

@@ -13,10 +13,10 @@ export async function OPTIONS(request: NextRequest) {
 // GET /api/interviews/[id] - 获取单个面试题
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }>; cloudflare?: { env?: any } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: idParam } = await context.params;
+    const { id: idParam } = await params;
     const id = parseInt(idParam);
     
     if (isNaN(id)) {
@@ -27,15 +27,14 @@ export async function GET(
       return setCorsHeaders(response, request.headers.get('origin'));
     }
     
-    // 从 Cloudflare context 中获取 INTERVIEW_DB
-    const env = context?.cloudflare?.env || process.env as any;
-    const INTERVIEW_DB = env?.INTERVIEW_DB;
+    const env = process.env as any;
+    const hasD1 = env.INTERVIEW_DB !== undefined;
     
     let question;
     
-    if (INTERVIEW_DB) {
+    if (hasD1) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(INTERVIEW_DB);
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       question = await store.getQuestionById(id);
     } else {
       // Development: Use mock data
@@ -65,10 +64,10 @@ export async function GET(
 // PUT /api/interviews/[id] - 更新面试题
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ id: string }>; cloudflare?: { env?: any } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: idParam } = await context.params;
+    const { id: idParam } = await params;
     const id = parseInt(idParam);
     
     if (isNaN(id)) {
@@ -108,15 +107,14 @@ export async function PUT(
     if (content !== undefined) updateData.content = content;
     if (answer !== undefined) updateData.answer = answer;
     
-    // 从 Cloudflare context 中获取 INTERVIEW_DB
-    const env = context?.cloudflare?.env || process.env as any;
-    const INTERVIEW_DB = env?.INTERVIEW_DB;
+    const env = process.env as any;
+    const hasD1 = env.INTERVIEW_DB !== undefined;
     
     let question;
     
-    if (INTERVIEW_DB) {
+    if (hasD1) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(INTERVIEW_DB);
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       question = await store.updateQuestion(id, updateData);
     } else {
       // Development: Use mock data
@@ -146,10 +144,10 @@ export async function PUT(
 // DELETE /api/interviews/[id] - 删除面试题
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }>; cloudflare?: { env?: any } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: idParam } = await context.params;
+    const { id: idParam } = await params;
     const id = parseInt(idParam);
     
     if (isNaN(id)) {
@@ -160,15 +158,14 @@ export async function DELETE(
       return setCorsHeaders(response, request.headers.get('origin'));
     }
     
-    // 从 Cloudflare context 中获取 INTERVIEW_DB
-    const env = context?.cloudflare?.env || process.env as any;
-    const INTERVIEW_DB = env?.INTERVIEW_DB;
+    const env = process.env as any;
+    const hasD1 = env.INTERVIEW_DB !== undefined;
     
     let question;
     
-    if (INTERVIEW_DB) {
+    if (hasD1) {
       // Production: Use INTERVIEW_DB
-      const store = new D1InterviewStore(INTERVIEW_DB);
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       question = await store.deleteQuestion(id);
     } else {
       // Development: Use mock data
