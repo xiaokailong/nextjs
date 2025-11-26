@@ -5,8 +5,9 @@ import { memoryInterviewStore } from '@/lib/mockDatabase';
 // GET /api/interviews/categories - 获取所有分类
 export async function GET(request: NextRequest) {
   try {
-    // @ts-ignore - Cloudflare 特定属性
-    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
+    // @ts-ignore
+    const env = process.env as any;
+    const INTERVIEW_DB = env.INTERVIEW_DB;
 
     console.log('[Categories API] INTERVIEW_DB available:', !!INTERVIEW_DB);
 

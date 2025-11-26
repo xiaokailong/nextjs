@@ -21,9 +21,10 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     
-    // Cloudflare Pages 环境下，D1 绑定通过特殊方式访问
-    // @ts-ignore - Cloudflare 特定属性
-    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
+    // Cloudflare 绑定访问：在 Edge Runtime 中，绑定可以通过 process.env 访问
+    // @ts-ignore
+    const env = process.env as any;
+    const INTERVIEW_DB = env.INTERVIEW_DB;
     
     console.log('[Interview API] INTERVIEW_DB available:', !!INTERVIEW_DB);
     
@@ -91,8 +92,9 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // @ts-ignore - Cloudflare 特定属性
-    const INTERVIEW_DB = process.env.INTERVIEW_DB || (typeof globalThis !== 'undefined' && (globalThis as any).INTERVIEW_DB);
+    // @ts-ignore
+    const env = process.env as any;
+    const INTERVIEW_DB = env.INTERVIEW_DB;
     
     console.log('[Interview API POST] INTERVIEW_DB available:', !!INTERVIEW_DB);
     

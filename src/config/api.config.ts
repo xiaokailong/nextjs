@@ -1,23 +1,32 @@
 // API 配置
-// 根据环境变量决定使用本地 API 还是远程生产 API
+// 自动识别环境：
+// - 本地开发环境 (localhost) → 使用生产 API
+// - 生产环境 (Cloudflare Pages) → 使用本地 API 路径
+
+const isProduction = process.env.NODE_ENV === 'production';
+const isClient = typeof window !== 'undefined';
+
+// 生产 API 地址
+const PRODUCTION_API_URL = 'https://velen-nextjs.pages.dev';
 
 export const API_CONFIG = {
-  // 如果设置了 NEXT_PUBLIC_API_BASE_URL，使用远程 API，否则使用本地 API
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '',
+  // 开发环境使用生产 API，生产环境使用本地路径
+  baseURL: !isProduction ? PRODUCTION_API_URL : '',
   
   // 是否使用远程 API
-  useRemoteAPI: !!process.env.NEXT_PUBLIC_API_BASE_URL,
+  useRemoteAPI: !isProduction,
 };
 
 // API 路径构建函数
 export function getAPIPath(path: string): string {
-  // 如果使用远程 API，返回完整 URL
+  // 开发环境：返回完整的生产 API URL
   if (API_CONFIG.useRemoteAPI) {
     return `${API_CONFIG.baseURL}${path}`;
   }
-  // 否则返回本地 API 路径
+  // 生产环境：返回本地 API 路径
   return path;
 }
 
 // 使用示例：
-// const response = await fetch(getAPIPath('/api/interviews'));
+// 开发环境: fetch(getAPIPath('/api/interviews')) → 'https://velen-nextjs.pages.dev/api/interviews'
+// 生产环境: fetch(getAPIPath('/api/interviews')) → '/api/interviews'
