@@ -21,12 +21,27 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     
-    // Cloudflare 绑定访问：在 Edge Runtime 中，绑定可以通过 process.env 访问
+    // Cloudflare 绑定访问：尝试多种方式
     // @ts-ignore
-    const env = process.env as any;
-    const INTERVIEW_DB = env.INTERVIEW_DB;
+    let INTERVIEW_DB = null;
     
+    // 方式1: 直接从 process.env
+    if (process.env.INTERVIEW_DB) {
+      INTERVIEW_DB = process.env.INTERVIEW_DB;
+      console.log('[Interview API] ✅ Found INTERVIEW_DB via process.env');
+    }
+    
+    // 方式2: 从 globalThis
+    // @ts-ignore
+    if (!INTERVIEW_DB && typeof globalThis !== 'undefined' && globalThis.INTERVIEW_DB) {
+      // @ts-ignore
+      INTERVIEW_DB = globalThis.INTERVIEW_DB;
+      console.log('[Interview API] ✅ Found INTERVIEW_DB via globalThis');
+    }
+    
+    console.log('[Interview API] INTERVIEW_DB type:', typeof INTERVIEW_DB);
     console.log('[Interview API] INTERVIEW_DB available:', !!INTERVIEW_DB);
+    console.log('[Interview API] NODE_ENV:', process.env.NODE_ENV);
     
     if (INTERVIEW_DB) {
       // Production: Use INTERVIEW_DB
@@ -93,8 +108,19 @@ export async function POST(request: NextRequest) {
     }
     
     // @ts-ignore
-    const env = process.env as any;
-    const INTERVIEW_DB = env.INTERVIEW_DB;
+    let INTERVIEW_DB = null;
+    
+    if (process.env.INTERVIEW_DB) {
+      INTERVIEW_DB = process.env.INTERVIEW_DB;
+      console.log('[Interview API POST] ✅ Found INTERVIEW_DB via process.env');
+    }
+    
+    // @ts-ignore
+    if (!INTERVIEW_DB && typeof globalThis !== 'undefined' && globalThis.INTERVIEW_DB) {
+      // @ts-ignore
+      INTERVIEW_DB = globalThis.INTERVIEW_DB;
+      console.log('[Interview API POST] ✅ Found INTERVIEW_DB via globalThis');
+    }
     
     console.log('[Interview API POST] INTERVIEW_DB available:', !!INTERVIEW_DB);
     
