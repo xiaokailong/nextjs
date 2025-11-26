@@ -4,12 +4,19 @@ import { Class } from '@/types/class';
 import { interviewQuestions, interviewCategories } from '@/data/interviewQuestions';
 
 // 在服务器端导入 jsonStore
+// 注意：Edge Runtime 中无法使用 fs 模块，所以会降级到 interviewQuestions
 let jsonStore: any = null;
 if (typeof window === 'undefined') {
   try {
-    // 直接导入 jsonStore（Next.js 会处理 TypeScript 编译）
-    jsonStore = require('./jsonStore').jsonStore;
-    console.log('[MockDatabase] jsonStore loaded successfully');
+    // 检测是否在 Edge Runtime 中（没有 process.version）
+    // @ts-ignore
+    if (typeof process !== 'undefined' && process.version) {
+      // Node.js runtime - 可以使用 fs
+      jsonStore = require('./jsonStore').jsonStore;
+      console.log('[MockDatabase] jsonStore loaded successfully (Node.js runtime)');
+    } else {
+      console.log('[MockDatabase] Edge runtime detected, using in-memory data');
+    }
   } catch (e) {
     console.warn('[MockDatabase] Failed to load jsonStore:', e);
     console.warn('[MockDatabase] Will use in-memory data as fallback');

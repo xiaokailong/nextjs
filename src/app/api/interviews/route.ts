@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { D1InterviewStore } from '@/lib/d1InterviewStore';
 import { memoryInterviewStore } from '@/lib/mockDatabase';
 
+/**
+ * 本地开发环境：
+ * - 因为使用 edge runtime，无法访问 fs 模块
+ * - 会使用 interviewQuestions.ts 中的静态数据（15条，只读）
+ * - 如需本地测试增删改功能，请临时注释掉下面的 runtime 配置
+ * 
+ * 生产环境（Cloudflare）：
+ * - 检测到 INTERVIEW_DB 环境变量
+ * - 使用真实的 D1 数据库
+ * - 支持完整的增删改查
+ */
+
 // GET /api/interviews - 获取所有面试题或按分类/搜索过滤
 export async function GET(request: NextRequest) {
   try {
@@ -113,5 +125,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Note: 不使用 edge runtime，以便本地开发时可以使用 fs 模块读取 db.json
-// 部署到 Cloudflare 时会自动使用 Workers 环境
+export const runtime = 'edge';
