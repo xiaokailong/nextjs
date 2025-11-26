@@ -113,4 +113,5 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export const runtime = 'edge';
+// Note: 不使用 edge runtime，以便本地开发时可以使用 fs 模块读取 db.json
+// 部署到 Cloudflare 时会自动使用 Workers 环境

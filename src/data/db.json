@@ -3,7 +3,7 @@
     "questions": [
       {
         "id": 1,
-        "title": "什么是闭包？闭包的应用场景有哪些？w",
+        "title": "什么是闭包？闭包的应用场景有哪些？",
         "category": "javascript",
         "difficulty": "medium",
         "tags": [
@@ -12,9 +12,9 @@
           "核心概念"
         ],
         "content": "闭包是 JavaScript 中的一个重要概念。请详细解释：\n1. 什么是闭包？\n2. 闭包的工作原理\n3. 闭包的常见应用场景\n4. 闭包可能带来的问题",
-        "answer": "<p>闭包是指函数能够访问其词法作用域外部的变量。 **工作原理：** 当函数嵌套时，内部函数可以访问外部函数的变量，即使外部函数已经执行完毕。 **应用场景：** 1. 数据私有化/模块化 2. 函数工厂 3. 回调函数和事件处理 4. 防抖节流 **示例代码：** ```javascript function createCounter() { let count = 0; return { increment: () =&gt; ++count, decrement: () =&gt; --count, getCount: () =&gt; count }; } ``` **注意事项：** 过度使用闭包可能导致内存泄漏，因为闭包会保持对外部变量的引用。</p>",
+        "answer": "闭包是指函数能够访问其词法作用域外部的变量。\n\n**工作原理：**\n当函数嵌套时，内部函数可以访问外部函数的变量，即使外部函数已经执行完毕。\n\n**应用场景：**\n1. 数据私有化/模块化\n2. 函数工厂\n3. 回调函数和事件处理\n4. 防抖节流\n\n**示例代码：**\n```javascript\nfunction createCounter() {\n  let count = 0;\n  return {\n    increment: () => ++count,\n    decrement: () => --count,\n    getCount: () => count\n  };\n}\n```\n\n**注意事项：**\n过度使用闭包可能导致内存泄漏，因为闭包会保持对外部变量的引用。",
         "createdAt": "2024-01-01",
-        "updatedAt": "2025-11-26T05:27:30.638Z"
+        "updatedAt": "2024-01-01"
       },
       {
         "id": 2,
@@ -47,23 +47,200 @@
       },
       {
         "id": 4,
-        "title": "ssb",
-        "category": "react",
+        "title": "HTTP 与 HTTPS 的区别",
+        "category": "network",
+        "difficulty": "easy",
+        "tags": [
+          "HTTP",
+          "HTTPS",
+          "安全"
+        ],
+        "content": "请说明 HTTP 和 HTTPS 的区别，以及 HTTPS 的工作原理。",
+        "answer": "**主要区别：**\n\n| 特性 | HTTP | HTTPS |\n|------|------|-------|\n| 安全性 | 明文传输 | 加密传输 |\n| 端口 | 80 | 443 |\n| 证书 | 不需要 | 需要 SSL/TLS 证书 |\n| SEO | 较低 | 较高 |\n\n**HTTPS 工作原理：**\n1. 客户端发起 HTTPS 请求\n2. 服务器返回 SSL 证书\n3. 客户端验证证书有效性\n4. 使用非对称加密协商对称密钥\n5. 使用对称密钥加密数据通信\n\n**加密过程：**\n```\n客户端 -----(Client Hello)-----> 服务器\n客户端 <----(Server Hello + 证书)--- 服务器\n客户端 -----(加密的预主密钥)-----> 服务器\n       [协商完成，开始加密通信]\n```\n\n**优势：**\n- 数据加密，防止窃听\n- 数据完整性校验\n- 身份认证，防止中间人攻击",
+        "createdAt": "2024-01-04",
+        "updatedAt": "2024-01-04"
+      },
+      {
+        "id": 5,
+        "title": "Vue 响应式原理",
+        "category": "vue",
+        "difficulty": "hard",
+        "tags": [
+          "响应式",
+          "Proxy",
+          "Observer"
+        ],
+        "content": "请详细说明 Vue 2 和 Vue 3 的响应式原理及其区别。",
+        "answer": "**Vue 2 响应式原理 (Object.defineProperty)：**\n\n```javascript\nfunction defineReactive(obj, key, val) {\n  const dep = new Dep();\n  \n  Object.defineProperty(obj, key, {\n    get() {\n      if (Dep.target) {\n        dep.depend(); // 收集依赖\n      }\n      return val;\n    },\n    set(newVal) {\n      if (newVal === val) return;\n      val = newVal;\n      dep.notify(); // 触发更新\n    }\n  });\n}\n```\n\n**Vue 3 响应式原理 (Proxy)：**\n\n```javascript\nfunction reactive(obj) {\n  return new Proxy(obj, {\n    get(target, key, receiver) {\n      track(target, key); // 收集依赖\n      return Reflect.get(target, key, receiver);\n    },\n    set(target, key, value, receiver) {\n      const result = Reflect.set(target, key, value, receiver);\n      trigger(target, key); // 触发更新\n      return result;\n    }\n  });\n}\n```\n\n**主要区别：**\n\n| 特性 | Vue 2 | Vue 3 |\n|------|-------|-------|\n| 实现方式 | Object.defineProperty | Proxy |\n| 数组监听 | 需要重写数组方法 | 原生支持 |\n| 新增属性 | 需要 $set | 自动响应 |\n| 性能 | 初始化时遍历所有属性 | 懒代理，性能更好 |\n| 删除属性 | 需要 $delete | 自动响应 |\n\n**优势：**\n- Proxy 可以监听整个对象，包括新增和删除属性\n- 性能更好，不需要递归遍历所有属性\n- 支持 Map、Set 等数据结构",
+        "createdAt": "2024-01-05",
+        "updatedAt": "2024-01-05"
+      },
+      {
+        "id": 6,
+        "title": "前端性能优化策略",
+        "category": "performance",
         "difficulty": "medium",
         "tags": [
-          "w"
+          "性能优化",
+          "最佳实践"
         ],
-        "content": "<p>wr</p>",
-        "answer": "<p>er</p>",
-        "createdAt": "2025-11-26T05:27:53.342Z",
-        "updatedAt": "2025-11-26T05:28:03.534Z"
+        "content": "请列举前端性能优化的主要策略和具体实施方法。",
+        "answer": "**1. 加载性能优化：**\n- 代码分割 (Code Splitting)\n- 懒加载 (Lazy Loading)\n- Tree Shaking\n- 压缩资源 (Gzip/Brotli)\n- CDN 加速\n- HTTP/2 多路复用\n\n**2. 渲染性能优化：**\n- 减少重排重绘\n- 使用 CSS3 动画代替 JS 动画\n- 虚拟滚动\n- 防抖节流\n- RequestAnimationFrame\n\n**3. 资源优化：**\n```javascript\n// 图片懒加载\nconst observer = new IntersectionObserver((entries) => {\n  entries.forEach(entry => {\n    if (entry.isIntersecting) {\n      const img = entry.target;\n      img.src = img.dataset.src;\n      observer.unobserve(img);\n    }\n  });\n});\n\n// 防抖\nfunction debounce(fn, delay) {\n  let timer;\n  return function(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn.apply(this, args), delay);\n  };\n}\n```\n\n**4. React 特定优化：**\n- React.memo / useMemo / useCallback\n- 虚拟列表\n- Suspense 和 Lazy\n\n**5. 监控指标：**\n- FCP (First Contentful Paint)\n- LCP (Largest Contentful Paint)\n- FID (First Input Delay)\n- CLS (Cumulative Layout Shift)",
+        "createdAt": "2024-01-06",
+        "updatedAt": "2024-01-06"
+      },
+      {
+        "id": 7,
+        "title": "实现深拷贝的多种方法",
+        "category": "javascript",
+        "difficulty": "medium",
+        "tags": [
+          "深拷贝",
+          "浅拷贝",
+          "对象"
+        ],
+        "content": "请实现一个完整的深拷贝函数，并说明各种深拷贝方法的优缺点。",
+        "answer": "**方法一：JSON 序列化（简单但有限制）**\n```javascript\nconst deepClone1 = (obj) => JSON.parse(JSON.stringify(obj));\n// 缺点：无法处理函数、undefined、Symbol、循环引用\n```\n\n**方法二：递归实现（完整版）**\n```javascript\nfunction deepClone(obj, hash = new WeakMap()) {\n  // 处理 null 或非对象\n  if (obj === null || typeof obj !== 'object') return obj;\n  \n  // 处理日期\n  if (obj instanceof Date) return new Date(obj);\n  \n  // 处理正则\n  if (obj instanceof RegExp) return new RegExp(obj);\n  \n  // 处理循环引用\n  if (hash.has(obj)) return hash.get(obj);\n  \n  // 创建新对象/数组\n  const cloneObj = new obj.constructor();\n  hash.set(obj, cloneObj);\n  \n  // 递归拷贝\n  for (let key in obj) {\n    if (obj.hasOwnProperty(key)) {\n      cloneObj[key] = deepClone(obj[key], hash);\n    }\n  }\n  \n  // 处理 Symbol 属性\n  const symbols = Object.getOwnPropertySymbols(obj);\n  for (let sym of symbols) {\n    cloneObj[sym] = deepClone(obj[sym], hash);\n  }\n  \n  return cloneObj;\n}\n```\n\n**方法三：structuredClone (现代浏览器)**\n```javascript\nconst clone = structuredClone(obj);\n// 支持大多数类型，但不支持函数\n```\n\n**对比：**\n| 方法 | 优点 | 缺点 |\n|------|------|------|\n| JSON | 简单快速 | 类型支持有限 |\n| 递归 | 功能完整 | 代码复杂 |\n| structuredClone | 原生支持 | 不支持函数 |",
+        "createdAt": "2024-01-07",
+        "updatedAt": "2024-01-07"
+      },
+      {
+        "id": 8,
+        "title": "Webpack 和 Vite 的区别",
+        "category": "engineering",
+        "difficulty": "medium",
+        "tags": [
+          "构建工具",
+          "Webpack",
+          "Vite"
+        ],
+        "content": "请对比 Webpack 和 Vite 的原理和特点。",
+        "answer": "**核心差异：**\n\n**Webpack:**\n- 基于 Bundle 的构建工具\n- 开发时需要打包整个应用\n- 启动较慢，但生态成熟\n\n**Vite:**\n- 基于 ESM 的开发服务器\n- 开发时按需编译\n- 冷启动快，HMR 更新快\n\n**工作原理对比：**\n\n```\nWebpack 开发流程：\n源码 → 全量打包 → Bundle → 浏览器\n\nVite 开发流程：\n源码 → ESM 导入 → 按需编译 → 浏览器\n```\n\n**配置示例：**\n\n```javascript\n// vite.config.js\nexport default {\n  plugins: [react()],\n  build: {\n    rollupOptions: {\n      output: {\n        manualChunks: {\n          vendor: ['react', 'react-dom']\n        }\n      }\n    }\n  }\n}\n```\n\n**选型建议：**\n- 新项目：推荐 Vite（开发体验好）\n- 复杂项目：Webpack（生态更完善）\n- 构建工具库：Rollup\n\n**性能对比：**\n| 指标 | Webpack | Vite |\n|------|---------|------|\n| 冷启动 | 慢 | 快 |\n| HMR | 较慢 | 极快 |\n| 生产构建 | 成熟 | 基于Rollup |\n| 生态 | 丰富 | 增长中 |",
+        "createdAt": "2024-01-08",
+        "updatedAt": "2024-01-08"
+      },
+      {
+        "id": 9,
+        "title": "实现 Promise.all 和 Promise.race",
+        "category": "javascript",
+        "difficulty": "hard",
+        "tags": [
+          "Promise",
+          "异步编程"
+        ],
+        "content": "请手动实现 Promise.all 和 Promise.race 方法。",
+        "answer": "**Promise.all 实现：**\n```javascript\nPromise.myAll = function(promises) {\n  return new Promise((resolve, reject) => {\n    if (!Array.isArray(promises)) {\n      return reject(new TypeError('Argument must be an array'));\n    }\n    \n    const results = [];\n    let completedCount = 0;\n    const total = promises.length;\n    \n    if (total === 0) {\n      return resolve([]);\n    }\n    \n    promises.forEach((promise, index) => {\n      Promise.resolve(promise).then(\n        value => {\n          results[index] = value;\n          completedCount++;\n          \n          if (completedCount === total) {\n            resolve(results);\n          }\n        },\n        error => {\n          reject(error); // 任一失败则整体失败\n        }\n      );\n    });\n  });\n};\n```\n\n**Promise.race 实现：**\n```javascript\nPromise.myRace = function(promises) {\n  return new Promise((resolve, reject) => {\n    if (!Array.isArray(promises)) {\n      return reject(new TypeError('Argument must be an array'));\n    }\n    \n    if (promises.length === 0) {\n      return;\n    }\n    \n    promises.forEach(promise => {\n      Promise.resolve(promise).then(\n        value => resolve(value),  // 第一个完成的决定结果\n        error => reject(error)\n      );\n    });\n  });\n};\n```\n\n**使用示例：**\n```javascript\n// Promise.all 示例\nconst p1 = Promise.resolve(1);\nconst p2 = Promise.resolve(2);\nconst p3 = Promise.resolve(3);\n\nPromise.myAll([p1, p2, p3]).then(console.log); // [1, 2, 3]\n\n// Promise.race 示例\nconst fast = new Promise(resolve => setTimeout(() => resolve('fast'), 100));\nconst slow = new Promise(resolve => setTimeout(() => resolve('slow'), 500));\n\nPromise.myRace([fast, slow]).then(console.log); // 'fast'\n```\n\n**关键点：**\n- Promise.all 等待所有完成或任一失败\n- Promise.race 返回第一个完成的结果\n- 都需要处理非 Promise 值",
+        "createdAt": "2024-01-09",
+        "updatedAt": "2024-01-09"
+      },
+      {
+        "id": 10,
+        "title": "快速排序算法实现",
+        "category": "algorithm",
+        "difficulty": "medium",
+        "tags": [
+          "排序",
+          "算法",
+          "分治"
+        ],
+        "content": "请实现快速排序算法，并分析其时间复杂度。",
+        "answer": "**快速排序实现：**\n\n```javascript\nfunction quickSort(arr, left = 0, right = arr.length - 1) {\n  if (left >= right) return arr;\n  \n  const pivotIndex = partition(arr, left, right);\n  quickSort(arr, left, pivotIndex - 1);\n  quickSort(arr, pivotIndex + 1, right);\n  \n  return arr;\n}\n\nfunction partition(arr, left, right) {\n  const pivot = arr[right];\n  let i = left - 1;\n  \n  for (let j = left; j < right; j++) {\n    if (arr[j] < pivot) {\n      i++;\n      [arr[i], arr[j]] = [arr[j], arr[i]];\n    }\n  }\n  \n  [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];\n  return i + 1;\n}\n\n// 使用示例\nconst arr = [64, 34, 25, 12, 22, 11, 90];\nconsole.log(quickSort([...arr])); // [11, 12, 22, 25, 34, 64, 90]\n```\n\n**简洁版本（非原地排序）：**\n```javascript\nfunction quickSort(arr) {\n  if (arr.length <= 1) return arr;\n  \n  const pivot = arr[Math.floor(arr.length / 2)];\n  const left = arr.filter(x => x < pivot);\n  const middle = arr.filter(x => x === pivot);\n  const right = arr.filter(x => x > pivot);\n  \n  return [...quickSort(left), ...middle, ...quickSort(right)];\n}\n```\n\n**复杂度分析：**\n- **时间复杂度：**\n  - 最好/平均: O(n log n)\n  - 最坏: O(n²) - 数组已排序且选择首/尾元素作为pivot\n- **空间复杂度：** O(log n) - 递归栈空间\n- **稳定性：** 不稳定\n\n**优化方案：**\n1. 三数取中选择 pivot\n2. 小数组使用插入排序\n3. 尾递归优化",
+        "createdAt": "2024-01-10",
+        "updatedAt": "2024-01-10"
+      },
+      {
+        "id": 11,
+        "title": "React Virtual DOM 原理",
+        "category": "react",
+        "difficulty": "hard",
+        "tags": [
+          "Virtual DOM",
+          "Diff算法",
+          "React"
+        ],
+        "content": "请说明 React Virtual DOM 的工作原理和 Diff 算法。",
+        "answer": "**Virtual DOM 工作流程：**\n\n```\n1. 状态改变 → 2. 生成新 VNode 树 → 3. Diff 对比 \n→ 4. 计算最小更新 → 5. 批量更新真实 DOM\n```\n\n**Diff 算法三大策略：**\n\n1. **Tree Diff**: 同层比较，跨层级移动视为删除+创建\n2. **Component Diff**: 同类型组件继续比较，不同类型直接替换\n3. **Element Diff**: 使用 key 优化列表对比\n\n**简化实现：**\n```javascript\nfunction diff(oldVNode, newVNode) {\n  // 类型不同，直接替换\n  if (oldVNode.type !== newVNode.type) {\n    return { type: 'REPLACE', newVNode };\n  }\n  \n  // 文本节点\n  if (typeof newVNode === 'string') {\n    if (oldVNode !== newVNode) {\n      return { type: 'TEXT', text: newVNode };\n    }\n    return null;\n  }\n  \n  // 比较属性\n  const propsPatches = diffProps(oldVNode.props, newVNode.props);\n  \n  // 比较子节点\n  const childPatches = diffChildren(\n    oldVNode.children, \n    newVNode.children\n  );\n  \n  return {\n    type: 'UPDATE',\n    props: propsPatches,\n    children: childPatches\n  };\n}\n\nfunction diffChildren(oldChildren, newChildren) {\n  const patches = [];\n  const oldKeys = {};\n  \n  // 建立 key 映射\n  oldChildren.forEach((child, i) => {\n    const key = child.key || i;\n    oldKeys[key] = { child, index: i };\n  });\n  \n  newChildren.forEach((newChild, i) => {\n    const key = newChild.key || i;\n    const old = oldKeys[key];\n    \n    if (old) {\n      patches.push(diff(old.child, newChild));\n    } else {\n      patches.push({ type: 'INSERT', node: newChild, index: i });\n    }\n  });\n  \n  return patches;\n}\n```\n\n**为什么需要 key：**\n```jsx\n// 不推荐：使用 index 作为 key\n{items.map((item, index) => <Item key={index} data={item} />)}\n\n// 推荐：使用唯一标识作为 key\n{items.map(item => <Item key={item.id} data={item} />)}\n```\n\n**优势：**\n- 减少 DOM 操作\n- 批量更新\n- 跨平台能力（React Native）",
+        "createdAt": "2024-01-11",
+        "updatedAt": "2024-01-11"
+      },
+      {
+        "id": 12,
+        "title": "CSS Flexbox 布局详解",
+        "category": "css",
+        "difficulty": "medium",
+        "tags": [
+          "Flexbox",
+          "布局",
+          "CSS"
+        ],
+        "content": "请详细说明 Flexbox 布局的核心概念和常用属性。",
+        "answer": "**Flexbox 核心概念：**\n\n```\n主轴 (main axis) ←→\n侧轴 (cross axis) ↕\n\n[容器属性]          [项目属性]\nflex-direction      order\nflex-wrap          flex-grow\njustify-content    flex-shrink\nalign-items        flex-basis\nalign-content      align-self\n```\n\n**容器属性详解：**\n```css\n.container {\n  display: flex;\n  \n  /* 主轴方向 */\n  flex-direction: row | row-reverse | column | column-reverse;\n  \n  /* 换行 */\n  flex-wrap: nowrap | wrap | wrap-reverse;\n  \n  /* 主轴对齐 */\n  justify-content: flex-start | flex-end | center | \n                   space-between | space-around | space-evenly;\n  \n  /* 侧轴对齐 */\n  align-items: flex-start | flex-end | center | \n               baseline | stretch;\n  \n  /* 多行侧轴对齐 */\n  align-content: flex-start | flex-end | center | \n                 space-between | space-around | stretch;\n}\n```\n\n**项目属性详解：**\n```css\n.item {\n  /* 排序 */\n  order: 0; /* 数字越小越靠前 */\n  \n  /* 放大比例 */\n  flex-grow: 0; /* 默认不放大 */\n  \n  /* 缩小比例 */\n  flex-shrink: 1; /* 默认会缩小 */\n  \n  /* 初始大小 */\n  flex-basis: auto;\n  \n  /* 简写 */\n  flex: 1; /* flex-grow flex-shrink flex-basis */\n  \n  /* 单独对齐 */\n  align-self: auto | flex-start | flex-end | center | baseline | stretch;\n}\n```\n\n**实用案例：**\n```css\n/* 1. 水平垂直居中 */\n.center {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n/* 2. 两端对齐 */\n.space-between {\n  display: flex;\n  justify-content: space-between;\n}\n\n/* 3. 等分布局 */\n.equal {\n  display: flex;\n}\n.equal > * {\n  flex: 1;\n}\n\n/* 4. 圣杯布局 */\n.holy-grail {\n  display: flex;\n  min-height: 100vh;\n}\n.sidebar { flex: 0 0 200px; }\n.main { flex: 1; }\n```",
+        "createdAt": "2024-01-12",
+        "updatedAt": "2024-01-12"
+      },
+      {
+        "id": 13,
+        "title": "TypeScript 高级类型",
+        "category": "javascript",
+        "difficulty": "hard",
+        "tags": [
+          "TypeScript",
+          "类型系统"
+        ],
+        "content": "请介绍 TypeScript 的高级类型特性和使用场景。",
+        "answer": "**1. 联合类型和交叉类型：**\n```typescript\n// 联合类型 (|)\ntype Status = 'pending' | 'success' | 'error';\n\n// 交叉类型 (&)\ntype Person = { name: string };\ntype Employee = { id: number };\ntype Staff = Person & Employee;\n// Staff = { name: string; id: number }\n```\n\n**2. 条件类型：**\n```typescript\ntype IsString<T> = T extends string ? true : false;\n\ntype A = IsString<string>;  // true\ntype B = IsString<number>;  // false\n\n// 实用工具类型\ntype NonNullable<T> = T extends null | undefined ? never : T;\ntype Extract<T, U> = T extends U ? T : never;\n```\n\n**3. 映射类型：**\n```typescript\ntype Partial<T> = {\n  [P in keyof T]?: T[P];\n};\n\ntype Required<T> = {\n  [P in keyof T]-?: T[P];\n};\n\ntype Readonly<T> = {\n  readonly [P in keyof T]: T[P];\n};\n\ninterface User {\n  name: string;\n  age: number;\n}\n\ntype PartialUser = Partial<User>;\n// { name?: string; age?: number; }\n```\n\n**4. 模板字面量类型：**\n```typescript\ntype EventName<T extends string> = `on${Capitalize<T>}`;\n\ntype ClickEvent = EventName<'click'>;  // 'onClick'\ntype HoverEvent = EventName<'hover'>;  // 'onHover'\n\n// 组合使用\ntype Methods = 'GET' | 'POST';\ntype Endpoints = '/users' | '/posts';\ntype API = `${Methods} ${Endpoints}`;\n// 'GET /users' | 'GET /posts' | 'POST /users' | 'POST /posts'\n```\n\n**5. infer 关键字：**\n```typescript\ntype ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;\n\nfunction foo() {\n  return { x: 10, y: 20 };\n}\n\ntype FooReturn = ReturnType<typeof foo>;\n// { x: number; y: number }\n```\n\n**实际应用：**\n```typescript\n// API 响应类型推导\ntype ApiResponse<T> = {\n  data: T;\n  status: number;\n  message: string;\n};\n\n// 深度只读\ntype DeepReadonly<T> = {\n  readonly [P in keyof T]: T[P] extends object \n    ? DeepReadonly<T[P]> \n    : T[P];\n};\n```",
+        "createdAt": "2024-01-13",
+        "updatedAt": "2024-01-13"
+      },
+      {
+        "id": 14,
+        "title": "浏览器事件循环机制",
+        "category": "javascript",
+        "difficulty": "hard",
+        "tags": [
+          "事件循环",
+          "异步",
+          "宏任务",
+          "微任务"
+        ],
+        "content": "请详细说明浏览器的事件循环机制，包括宏任务和微任务的执行顺序。",
+        "answer": "**事件循环流程：**\n\n```\n1. 执行同步代码\n2. 执行微任务队列（全部）\n3. 执行一个宏任务\n4. 执行微任务队列（全部）\n5. 渲染更新（如需要）\n6. 重复步骤 3-5\n```\n\n**任务分类：**\n\n**宏任务 (MacroTask):**\n- setTimeout / setInterval\n- setImmediate (Node.js)\n- I/O 操作\n- UI 渲染\n- script 标签代码\n\n**微任务 (MicroTask):**\n- Promise.then/catch/finally\n- MutationObserver\n- queueMicrotask\n- process.nextTick (Node.js)\n\n**执行示例：**\n```javascript\nconsole.log('1');\n\nsetTimeout(() => {\n  console.log('2');\n  Promise.resolve().then(() => {\n    console.log('3');\n  });\n}, 0);\n\nPromise.resolve().then(() => {\n  console.log('4');\n  setTimeout(() => {\n    console.log('5');\n  }, 0);\n});\n\nconsole.log('6');\n\n// 输出顺序: 1 6 4 2 3 5\n```\n\n**执行过程分析：**\n```\nStep 1: 同步代码\n  输出: 1, 6\n\nStep 2: 微任务队列\n  执行 Promise → 输出: 4\n  (产生新宏任务 setTimeout-5)\n\nStep 3: 宏任务队列\n  执行 setTimeout-2 → 输出: 2\n  (产生新微任务 Promise-3)\n\nStep 4: 微任务队列\n  执行 Promise-3 → 输出: 3\n\nStep 5: 宏任务队列\n  执行 setTimeout-5 → 输出: 5\n```\n\n**经典面试题：**\n```javascript\nasync function async1() {\n  console.log('async1 start');\n  await async2();\n  console.log('async1 end');\n}\n\nasync function async2() {\n  console.log('async2');\n}\n\nconsole.log('script start');\n\nsetTimeout(() => {\n  console.log('setTimeout');\n}, 0);\n\nasync1();\n\nnew Promise(resolve => {\n  console.log('promise1');\n  resolve();\n}).then(() => {\n  console.log('promise2');\n});\n\nconsole.log('script end');\n\n/* 输出顺序:\nscript start\nasync1 start\nasync2\npromise1\nscript end\nasync1 end\npromise2\nsetTimeout\n*/\n```\n\n**关键点：**\n- await 后面的代码相当于 Promise.then()\n- 微任务优先级高于宏任务\n- 每次宏任务后都会清空微任务队列",
+        "createdAt": "2024-01-14",
+        "updatedAt": "2024-01-14"
+      },
+      {
+        "id": 15,
+        "title": "Git 常用命令和工作流",
+        "category": "engineering",
+        "difficulty": "easy",
+        "tags": [
+          "Git",
+          "版本控制"
+        ],
+        "content": "请介绍 Git 的常用命令和标准工作流程。",
+        "answer": "**基础命令：**\n```bash\n# 初始化仓库\ngit init\n\n# 克隆远程仓库\ngit clone <url>\n\n# 查看状态\ngit status\n\n# 添加文件到暂存区\ngit add .\ngit add <file>\n\n# 提交\ngit commit -m \"message\"\n\n# 推送\ngit push origin main\n\n# 拉取\ngit pull origin main\n```\n\n**分支操作：**\n```bash\n# 创建分支\ngit branch feature-x\n\n# 切换分支\ngit checkout feature-x\n# 或\ngit switch feature-x\n\n# 创建并切换\ngit checkout -b feature-x\n\n# 合并分支\ngit merge feature-x\n\n# 删除分支\ngit branch -d feature-x\n\n# 查看所有分支\ngit branch -a\n```\n\n**撤销操作：**\n```bash\n# 撤销工作区修改\ngit checkout -- <file>\ngit restore <file>\n\n# 撤销暂存区\ngit reset HEAD <file>\ngit restore --staged <file>\n\n# 撤销提交\ngit reset --soft HEAD^   # 保留修改\ngit reset --hard HEAD^   # 丢弃修改\n\n# 修改最后一次提交\ngit commit --amend\n```\n\n**查看历史：**\n```bash\n# 查看提交历史\ngit log\ngit log --oneline --graph\n\n# 查看文件修改\ngit diff\ngit diff --staged\n\n# 查看某次提交\ngit show <commit-id>\n```\n\n**Git Flow 工作流：**\n```\nmain (生产)\n  ↑\nrelease (预发布)\n  ↑\ndevelop (开发)\n  ↑\nfeature (功能分支)\n```\n\n**标准流程示例：**\n```bash\n# 1. 从 develop 创建功能分支\ngit checkout develop\ngit checkout -b feature/user-auth\n\n# 2. 开发并提交\ngit add .\ngit commit -m \"feat: add user authentication\"\n\n# 3. 推送到远程\ngit push origin feature/user-auth\n\n# 4. 创建 Pull Request\n\n# 5. 代码审查通过后合并到 develop\ngit checkout develop\ngit merge feature/user-auth\n\n# 6. 删除功能分支\ngit branch -d feature/user-auth\n```\n\n**实用技巧：**\n```bash\n# 暂存当前修改\ngit stash\ngit stash pop\n\n# 查看某个文件的历史\ngit log -p <file>\n\n# 找回删除的提交\ngit reflog\n\n# Cherry-pick\ngit cherry-pick <commit-id>\n\n# 变基（整理提交历史）\ngit rebase -i HEAD~3\n```",
+        "createdAt": "2024-01-15",
+        "updatedAt": "2024-01-15"
+      },
+      {
+        "id": 16,
+        "title": "sse",
+        "category": "javascript",
+        "difficulty": "medium",
+        "tags": [
+          "swe"
+        ],
+        "content": "<p>w</p>",
+        "answer": "<p>w</p>",
+        "createdAt": "2025-11-26T07:19:32.166Z",
+        "updatedAt": "2025-11-26T07:19:32.166Z"
       }
     ],
     "categories": [
       {
         "id": "javascript",
         "name": "JavaScript 基础",
-        "count": 1
+        "count": 6
       },
       {
         "id": "react",
@@ -73,35 +250,35 @@
       {
         "id": "vue",
         "name": "Vue",
-        "count": 0
+        "count": 1
       },
       {
         "id": "css",
         "name": "CSS",
-        "count": 1
+        "count": 2
       },
       {
         "id": "network",
         "name": "网络协议",
-        "count": 0
+        "count": 1
       },
       {
         "id": "performance",
         "name": "性能优化",
-        "count": 0
+        "count": 1
       },
       {
         "id": "algorithm",
         "name": "算法与数据结构",
-        "count": 0
+        "count": 1
       },
       {
         "id": "engineering",
         "name": "工程化",
-        "count": 0
+        "count": 2
       }
     ],
-    "nextId": 5
+    "nextId": 17
   },
   "students": [
     {

@@ -3,18 +3,16 @@ import { Student } from '@/types/student';
 import { Class } from '@/types/class';
 import { interviewQuestions, interviewCategories } from '@/data/interviewQuestions';
 
-// 动态导入 jsonStore，避免在 Edge Runtime 中加载 fs/path 模块
+// 在服务器端导入 jsonStore
 let jsonStore: any = null;
-
-// 检查是否在服务器端（非浏览器）
 if (typeof window === 'undefined') {
   try {
-    // 尝试同步导入 jsonStore
-    const { jsonStore: store } = require('./jsonStore');
-    jsonStore = store;
+    // 直接导入 jsonStore（Next.js 会处理 TypeScript 编译）
+    jsonStore = require('./jsonStore').jsonStore;
     console.log('[MockDatabase] jsonStore loaded successfully');
   } catch (e) {
-    console.warn('[MockDatabase] Failed to load jsonStore, will use in-memory data:', e);
+    console.warn('[MockDatabase] Failed to load jsonStore:', e);
+    console.warn('[MockDatabase] Will use in-memory data as fallback');
   }
 }
 
