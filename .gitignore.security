@@ -1,0 +1,16 @@
+# .gitignore 示例文件
+# 将敏感配置移到此文件，不要提交到代码仓库
+
+# Cloudflare Wrangler 配置（包含数据库 ID）
+wrangler.toml
+
+# 环境变量文件
+.env
+.env.local
+.env.production
+.env.development
+
+# 数据库文件
+*.db
+*.sqlite
+src/data/db.json

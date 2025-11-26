@@ -1,0 +1,23 @@
+name = "nextjs"
+compatibility_flags = ["nodejs_compat"]
+
+# 学生和班级数据库
+[[d1_databases]]
+binding = "DB"
+database_name = "students-db"
+database_id = "YOUR_STUDENTS_DB_ID_HERE"  # 替换为你的数据库 ID
+
+# 面试题数据库
+[[d1_databases]]
+binding = "INTERVIEW_DB"
+database_name = "interview-db"
+database_id = "YOUR_INTERVIEW_DB_ID_HERE"  # 替换为你的数据库 ID
+
+# 如何获取数据库 ID：
+# 1. 登录 Cloudflare Dashboard
+# 2. 进入 Workers & Pages > D1
+# 3. 点击你的数据库
+# 4. 复制 Database ID
+#
+# 或使用命令行：
+# wrangler d1 list

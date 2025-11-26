@@ -5,3 +5,8 @@ compatibility_flags = ["nodejs_compat"]
 binding = "DB"
 database_name = "students-db"
 database_id = "43d7dda4-8ee5-4918-933b-56eab744037c"
+
+[[d1_databases]]
+binding = "INTERVIEW_DB"
+database_name = "interview-db"
+database_id = "1a80acab-e719-45aa-8b1c-b51287c64a87"

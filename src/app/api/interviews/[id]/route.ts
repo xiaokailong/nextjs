@@ -2,16 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { D1InterviewStore } from '@/lib/d1InterviewStore';
 import { memoryInterviewStore } from '@/lib/mockDatabase';
 
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
-
 // GET /api/interviews/[id] - 获取单个面试题
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id: idParam } = await params;
+    const { id: idParam } = await context.params;
     const id = parseInt(idParam);
     
     if (isNaN(id)) {
@@ -23,9 +20,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     
     const env = process.env as any;
     
-    if (env.DB) {
-      // Production: Use D1
-      const store = new D1InterviewStore(env.DB);
+    if (env.INTERVIEW_DB) {
+      // Production: Use INTERVIEW_DB
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.getQuestionById(id);
       
       if (!question) {
@@ -59,9 +56,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 // PUT /api/interviews/[id] - 更新面试题
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id: idParam } = await params;
+    const { id: idParam } = await context.params;
     const id = parseInt(idParam);
     
     if (isNaN(id)) {
@@ -100,9 +100,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     
     const env = process.env as any;
     
-    if (env.DB) {
-      // Production: Use D1
-      const store = new D1InterviewStore(env.DB);
+    if (env.INTERVIEW_DB) {
+      // Production: Use INTERVIEW_DB
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.updateQuestion(id, updateData);
       
       if (!question) {
@@ -136,9 +136,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE /api/interviews/[id] - 删除面试题
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id: idParam } = await params;
+    const { id: idParam } = await context.params;
     const id = parseInt(idParam);
     
     if (isNaN(id)) {
@@ -150,9 +153,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     
     const env = process.env as any;
     
-    if (env.DB) {
-      // Production: Use D1
-      const store = new D1InterviewStore(env.DB);
+    if (env.INTERVIEW_DB) {
+      // Production: Use INTERVIEW_DB
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.deleteQuestion(id);
       
       if (!question) {

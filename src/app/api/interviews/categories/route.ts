@@ -6,10 +6,10 @@ import { memoryInterviewStore } from '@/lib/mockDatabase';
 export async function GET() {
   try {
     const env = process.env as any;
-    
-    if (env.DB) {
-      // Production: Use D1
-      const store = new D1InterviewStore(env.DB);
+
+    if (env.INTERVIEW_DB) {
+      // Production: Use INTERVIEW_DB
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       const categories = await store.getAllCategories();
       return NextResponse.json(categories);
     } else {

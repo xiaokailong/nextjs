@@ -11,9 +11,9 @@ export async function GET(request: NextRequest) {
     
     const env = process.env as any;
     
-    if (env.DB) {
-      // Production: Use D1
-      const store = new D1InterviewStore(env.DB);
+    if (env.INTERVIEW_DB) {
+      // Production: Use INTERVIEW_DB
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       
       if (search) {
         const questions = await store.searchQuestions(search);
@@ -77,9 +77,9 @@ export async function POST(request: NextRequest) {
     
     const env = process.env as any;
     
-    if (env.DB) {
-      // Production: Use D1
-      const store = new D1InterviewStore(env.DB);
+    if (env.INTERVIEW_DB) {
+      // Production: Use INTERVIEW_DB
+      const store = new D1InterviewStore(env.INTERVIEW_DB);
       const question = await store.createQuestion({
         title,
         category,
