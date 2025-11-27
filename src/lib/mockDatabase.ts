@@ -1,10 +1,9 @@
 // 数据库工具 - 本地开发和生产环境适配
 import { Student } from '@/types/student';
 import { Class } from '@/types/class';
-import { interviewQuestions, interviewCategories } from '@/data/interviewQuestions';
 
 // 在服务器端导入 jsonStore
-// 注意：Edge Runtime 中无法使用 fs 模块，所以会降级到 interviewQuestions
+// 注意：Edge Runtime 中无法使用 fs 模块，需要使用 D1 数据库
 let jsonStore: any = null;
 if (typeof window === 'undefined') {
   try {
@@ -15,11 +14,11 @@ if (typeof window === 'undefined') {
       jsonStore = require('./jsonStore').jsonStore;
       console.log('[MockDatabase] jsonStore loaded successfully (Node.js runtime)');
     } else {
-      console.log('[MockDatabase] Edge runtime detected, using in-memory data');
+      console.log('[MockDatabase] Edge runtime detected, D1 database required for interviews');
     }
   } catch (e) {
     console.warn('[MockDatabase] Failed to load jsonStore:', e);
-    console.warn('[MockDatabase] Will use in-memory data as fallback');
+    console.warn('[MockDatabase] D1 database required for interviews');
   }
 }
 
@@ -101,35 +100,32 @@ class MemoryClassStore {
 
 class MemoryInterviewStore {
   // 使用 JSON 文件存储，所有方法都委托给 jsonStore
-  // 如果 jsonStore 不可用，使用内存中的 interviewQuestions 数据
+  // Edge Runtime 环境必须使用 D1 数据库
   
   async getAllCategories(): Promise<any[]> {
     if (!jsonStore) {
-      console.log('[MemoryInterviewStore] Using in-memory categories');
-      return interviewCategories;
+      throw new Error('Interview data not available - please use D1 database (env.INTERVIEW_DB)');
     }
     return jsonStore.getAllCategories();
   }
 
   async getAllQuestions(): Promise<any[]> {
     if (!jsonStore) {
-      console.log('[MemoryInterviewStore] Using in-memory questions');
-      return interviewQuestions;
+      throw new Error('Interview data not available - please use D1 database (env.INTERVIEW_DB)');
     }
     return jsonStore.getAllQuestions();
   }
 
   async getQuestionsByCategory(category: string): Promise<any[]> {
     if (!jsonStore) {
-      if (category === 'all') return interviewQuestions;
-      return interviewQuestions.filter(q => q.category === category);
+      throw new Error('Interview data not available - please use D1 database (env.INTERVIEW_DB)');
     }
     return jsonStore.getQuestionsByCategory(category);
   }
 
   async getQuestionById(id: number): Promise<any | null> {
     if (!jsonStore) {
-      return interviewQuestions.find(q => q.id === String(id)) || null;
+      throw new Error('Interview data not available - please use D1 database (env.INTERVIEW_DB)');
     }
     return jsonStore.getQuestionById(id);
   }
@@ -150,18 +146,15 @@ class MemoryInterviewStore {
   }
 
   async countQuestions(): Promise<number> {
-    if (!jsonStore) return interviewQuestions.length;
+    if (!jsonStore) {
+      throw new Error('Interview data not available - please use D1 database (env.INTERVIEW_DB)');
+    }
     return jsonStore.countQuestions();
   }
 
   async searchQuestions(query: string): Promise<any[]> {
     if (!jsonStore) {
-      const lowerQuery = query.toLowerCase();
-      return interviewQuestions.filter(q =>
-        q.title.toLowerCase().includes(lowerQuery) ||
-        q.content.toLowerCase().includes(lowerQuery) ||
-        q.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
-      );
+      throw new Error('Interview data not available - please use D1 database (env.INTERVIEW_DB)');
     }
     return jsonStore.searchQuestions(query);
   }

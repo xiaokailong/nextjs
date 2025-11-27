@@ -5,12 +5,11 @@ import { setCorsHeaders, handleOptionsRequest } from '@/lib/cors';
 
 /**
  * 本地开发环境：
- * - 因为使用 edge runtime，无法访问 fs 模块
- * - 会使用 interviewQuestions.ts 中的静态数据（15条，只读）
- * - 如需本地测试增删改功能，请临时注释掉下面的 runtime 配置
+ * - 使用 Node.js runtime 时会读取 JSON 文件
+ * - 使用 Edge runtime 时必须配置 D1 数据库
  * 
  * 生产环境（Cloudflare）：
- * - 检测到 INTERVIEW_DB 环境变量
+ * - 必须在 Cloudflare Pages 控制台配置 INTERVIEW_DB 绑定
  * - 使用真实的 D1 数据库
  * - 支持完整的增删改查
  */
