@@ -43,7 +43,6 @@ wrangler.toml
 .wrangler/
 
 # Local database files
-src/data/db.json
 *.db
 *.sqlite
 ```

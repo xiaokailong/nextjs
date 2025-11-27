@@ -95,7 +95,7 @@ const response = await fetch(getAPIPath('/api/interviews'));
 | `NEXT_PUBLIC_API_BASE_URL` | 生产环境 API 地址 | `https://velen-nextjs.pages.dev` |
 
 - 设置后：使用远程生产 API
-- 未设置或为空：使用本地 API（mock 数据或 db.json）
+- 未设置或为空：使用本地 API（需要在生产环境或配置 D1 绑定）
 
 ## 注意事项
 

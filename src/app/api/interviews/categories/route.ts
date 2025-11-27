@@ -16,8 +16,6 @@ export async function GET(request: NextRequest) {
     const env = process.env as any;
     const hasD1 = env.INTERVIEW_DB !== undefined;
 
-    console.log('[Categories API] INTERVIEW_DB available:', hasD1);
-
     let categories;
 
     if (hasD1) {

@@ -150,8 +150,8 @@ pnpm run db:reset:interview
 ## 🌐 环境说明
 
 ### 本地开发环境
-- **Runtime**: Node.js
-- **存储**: JSON 文件 (`src/data/db.json`)
+- **数据源**: 生产环境 API（`https://velen-nextjs.pages.dev`）
+- **配置**: 通过 `.env.local` 文件配置
 - **启动命令**: `pnpm dev`
 
 ### 生产环境（Cloudflare）

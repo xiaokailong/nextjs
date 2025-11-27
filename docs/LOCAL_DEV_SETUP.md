@@ -1,49 +1,45 @@
 # 本地开发配置说明
 
-## 数据持久化方案
+## 数据访问方案
+
+本项目的本地开发环境直接连接生产环境 API，不再使用本地 JSON 文件存储。
 
 ### 本地开发环境
-- **存储方式**：JSON 文件（`src/data/db.json`）
-- **Runtime**：Node.js Runtime（支持 `fs` 模块）
-- **优点**：数据持久化，重启服务器后数据不丢失
+- **数据来源**：生产环境 API（`https://velen-nextjs.pages.dev`）
+- **配置方式**：通过 `.env.local` 文件配置
+- **优点**：
+  - 使用真实生产数据
+  - 无需维护本地数据库
+  - 开发环境与生产环境一致
 
-### 生产环境（Cloudflare）
-- **存储方式**：D1 数据库
+### 生产环境
+- **存储方式**：Cloudflare D1 数据库
 - **Runtime**：Edge Runtime
 - **优点**：高性能边缘计算
 
-## 重要修复说明
+## 配置步骤
 
-### 问题
-之前所有 API 路由使用了 `export const runtime = 'edge'`，但本地开发使用的 `jsonStore` 依赖 Node.js 的 `fs` 模块，导致：
-- ❌ Edge Runtime 不支持 `fs` 模块
-- ❌ 本地开发时 API 返回 500 错误
-- ❌ 数据无法读取和保存
+### 1. 创建环境变量文件
 
-### 解决方案
-将本地开发需要的 API 路由改为 **Node.js Runtime**（注释掉 `export const runtime = 'edge'`）：
+在项目根目录创建 `.env.local` 文件：
 
-#### 已修改的路由
-- ✅ `/api/students` 
-- ✅ `/api/students/[id]`
-- ✅ `/api/interviews`
-- ✅ `/api/interviews/[id]`
-- ✅ `/api/interviews/categories`
-- ✅ `/api/microservices/students`
-- ✅ `/api/microservices/students/[id]`
-- ✅ `/api/microservices/classes`
-- ✅ `/api/microservices/classes/[id]`
-- ✅ `/api/bff/students/age-groups`
-- ✅ `/api/bff/classes`
-- ✅ `/api/bff/classes/[id]`
-- ✅ `/api/bff/dashboard`
-
-## 数据文件位置
-```
-src/data/db.json
+```bash
+# 使用生产环境 API
+NEXT_PUBLIC_API_BASE_URL=https://velen-nextjs.pages.dev
 ```
 
-## 自动环境切换逻辑
+### 2. 启动开发服务器
+
+```bash
+pnpm dev
+```
+
+现在访问 http://localhost:3000，所有 API 调用都会请求生产环境。
+
+## API 路由说明
+
+所有 API 路由都支持自动环境切换：
+
 ```typescript
 const env = process.env as any;
 const hasD1 = env.DB !== undefined;
@@ -52,17 +48,12 @@ if (hasD1) {
   // 生产环境：使用 D1 数据库
   const store = new D1StudentStore(env.DB);
 } else {
-  // 本地开发：使用 JSON 文件存储
-  const students = await memoryStudentStore.getAll();
+  // 本地开发：返回错误，提示使用生产 API
+  throw new Error('Please use production API');
 }
 ```
 
-## 部署到 Cloudflare 时
-Cloudflare Workers 会自动提供 `env.DB` 绑定，代码会自动切换到 D1 数据库，无需修改任何代码。
+## 相关文档
 
-## 测试验证
-1. 启动开发服务器：`pnpm dev`
-2. 访问 http://localhost:3000/students
-3. 添加/修改数据
-4. 重启服务器，数据应该保持不变
-5. 检查 `src/data/db.json` 文件，应该能看到数据更新
+- [DEV_WITH_PRODUCTION_API.md](./DEV_WITH_PRODUCTION_API.md) - 详细的生产 API 使用指南
+- [SECURITY_SETUP.md](./SECURITY_SETUP.md) - 安全配置说明

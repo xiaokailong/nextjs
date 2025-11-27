@@ -31,8 +31,6 @@ export async function GET(request: NextRequest) {
     const env = process.env as any;
     const hasD1 = env.INTERVIEW_DB !== undefined;
     
-    console.log('[Interview API] INTERVIEW_DB available:', hasD1);
-    
     let questions;
     
     if (hasD1) {
@@ -102,8 +100,6 @@ export async function POST(request: NextRequest) {
     
     const env = process.env as any;
     const hasD1 = env.INTERVIEW_DB !== undefined;
-    
-    console.log('[Interview API POST] INTERVIEW_DB available:', hasD1);
     
     let question;
     

@@ -132,7 +132,7 @@ pnpm run deploy
 
 ## 📝 注意事项
 
-1. **本地开发**：仍然使用 JSON 文件存储（`src/data/db.json`）
+1. **本地开发**：直接连接生产环境 API（参考 [DEV_WITH_PRODUCTION_API.md](./DEV_WITH_PRODUCTION_API.md)）
 2. **生产环境**：自动检测 `env.DB` 和 `env.INTERVIEW_DB` 并使用相应的 D1 数据库
 3. **迁移文件**：`migrations/0003_create_interview_questions.sql` 已标记为废弃，不要使用
 

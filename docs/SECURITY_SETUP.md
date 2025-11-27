@@ -48,11 +48,11 @@ cp wrangler.toml.example wrangler.toml
 
 ### 步骤 4: 本地开发
 ```bash
-# 启动开发服务器（使用 JSON 文件存储）
+# 启动开发服务器（连接生产环境 API）
 pnpm dev
 ```
 
-本地开发时，数据会保存在 `src/data/db.json`（已添加到 .gitignore）
+本地开发时，通过 `.env.local` 配置连接到生产环境 API。
 
 ## 🚨 重要安全规则
 
@@ -69,10 +69,6 @@ pnpm dev
 
 3. **不要提交 `.env` 文件**
    - 包含敏感的环境变量
-   - 已添加到 .gitignore
-
-4. **不要提交数据库文件**
-   - `src/data/db.json` 包含本地开发数据
    - 已添加到 .gitignore
 
 ### ✅ 应该做的事：
@@ -97,7 +93,6 @@ pnpm dev
 | `wrangler.toml` | ❌ 不提交 | 包含真实数据库 ID |
 | `wrangler.toml.example` | ✅ 提交 | 配置模板，无敏感信息 |
 | `.env` / `.env.local` | ❌ 不提交 | 环境变量 |
-| `src/data/db.json` | ❌ 不提交 | 本地开发数据 |
 | `package.json` | ✅ 提交 | 依赖配置 |
 | `*.md` 文档 | ✅ 提交 | 项目文档（已脱敏） |
 
@@ -107,7 +102,6 @@ pnpm dev
 
 - [ ] `git status` 中没有 `wrangler.toml`
 - [ ] `git status` 中没有 `.env` 文件
-- [ ] `git status` 中没有 `db.json`
 - [ ] 代码中没有硬编码的数据库 ID
 - [ ] 代码中没有硬编码的 API Token
 

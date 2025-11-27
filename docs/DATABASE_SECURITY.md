@@ -103,7 +103,6 @@ wrangler.toml
 # 数据库文件
 *.db
 *.sqlite
-src/data/db.json
 
 # 日志文件
 logs/

@@ -56,14 +56,14 @@ open http://localhost:3000
 - **students-db** (`DB`) - 学生和班级数据
 - **interview-db** (`INTERVIEW_DB`) - 面试题数据
 
-本地开发时使用 JSON 文件存储（`src/data/db.json`）。
+本地开发时直连生产环境 API。
 
 ## 🛠️ 主要技术栈
 
 - **框架**: Next.js 16 (App Router)
 - **语言**: TypeScript
 - **UI**: React 19, Tailwind CSS, HeroUI
-- **数据库**: Cloudflare D1 (生产) / JSON (开发)
+- **数据库**: Cloudflare D1
 - **部署**: Cloudflare Pages
 - **编辑器**: TipTap (富文本)
 
