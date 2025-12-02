@@ -42,7 +42,7 @@ export default function ClockCard({ isDark }: ClockCardProps) {
         
         if (!response.ok) {
           console.error('Weather API HTTP error:', response.status);
-          setWeather({ temp: 5, weather: '大连天气', icon: '☁️', humidity: 60 });
+          setWeather({ temp: -5, weather: '大连天气', icon: '☁️', humidity: 60 });
           return;
         }
         
@@ -67,11 +67,11 @@ export default function ClockCard({ isDark }: ClockCardProps) {
           });
         } else {
           console.error('Weather API code error:', data.code);
-          setWeather({ temp: 5, weather: '大连天气', icon: '☁️', humidity: 60 });
+          setWeather({ temp: -5, weather: '大连天气', icon: '☁️', humidity: 60 });
         }
       } catch (error) {
         console.error('Weather fetch error:', error);
-        setWeather({ temp: 5, weather: '大连天气', icon: '☁️', humidity: 60 });
+        setWeather({ temp: -5, weather: '大连天气', icon: '☁️', humidity: 60 });
       }
     };
 
@@ -83,6 +83,7 @@ export default function ClockCard({ isDark }: ClockCardProps) {
   useEffect(() => {
     const getLunarInfo = () => {
       const lunarMonths = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
+      const lunarDays = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
       const month = currentTime.getMonth();
       const day = currentTime.getDate();
       
@@ -105,8 +106,17 @@ export default function ClockCard({ isDark }: ClockCardProps) {
         return items;
       };
       
+      // 转换农历日期为大写
+      const getLunarDay = (d: number) => {
+        if (d <= 10) return `初${lunarDays[d]}`;
+        if (d < 20) return `十${lunarDays[d - 10]}`;
+        if (d === 20) return '二十';
+        if (d < 30) return `廿${lunarDays[d - 20]}`;
+        return '三十';
+      };
+      
       setLunarInfo({
-        lunar: `${lunarMonths[month]}${day > 15 ? '廿' : '初'}${day > 20 ? (day - 20) : day > 15 ? (day - 10) : day}`,
+        lunar: `${lunarMonths[month]}${getLunarDay(day)}`,
         suitable: getSuitableItems(),
         avoid: getAvoidItems()
       });
@@ -131,26 +141,11 @@ export default function ClockCard({ isDark }: ClockCardProps) {
   const year = currentTime.getFullYear();
   const month = currentTime.getMonth() + 1;
   const day = currentTime.getDate();
-  const time = currentTime.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit' });
+  const time = currentTime.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
   const weekDay = ['日', '一', '二', '三', '四', '五', '六'][currentTime.getDay()];
 
   return (
     <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-3 h-full flex flex-col justify-between`}>
-      {/* 时间显示 */}
-      <div className="flex flex-col items-center">
-        <div className={`text-4xl font-bold tracking-wider ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
-          {time}
-        </div>
-        <div className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-          {year}年{month}月{day}日 星期{weekDay}
-        </div>
-        {lunarInfo && (
-          <div className={`text-[10px] mt-0.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-            农历 {lunarInfo.lunar}
-          </div>
-        )}
-      </div>
-
       {/* 天气信息 */}
       <div className="flex flex-col items-center">
         {weather ? (
@@ -168,14 +163,29 @@ export default function ClockCard({ isDark }: ClockCardProps) {
         )}
       </div>
 
+      {/* 时间显示 */}
+      <div className="flex flex-col items-center">
+        <div className={`text-4xl font-bold tracking-wider ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+          {time}
+        </div>
+        <div className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+          {year}年{month}月{day}日 星期{weekDay}
+        </div>
+        {lunarInfo && (
+          <div className={`text-[10px] mt-0.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+            农历 {lunarInfo.lunar}
+          </div>
+        )}
+      </div>
+
       {/* 黄历信息 */}
       {lunarInfo && (
         <div className={`text-center space-y-0.5 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
           <div className="text-[10px] leading-relaxed">
-            <span className="text-green-500">宜</span> {lunarInfo.suitable.join(' · ')}
+            <span className="text-[10px] bg-green-500 text-white rounded hover:bg-green-600" style={{padding: '1.5px 3px'}}>宜</span> {lunarInfo.suitable.join(' · ')}
           </div>
           <div className="text-[10px] leading-relaxed">
-            <span className="text-red-500">忌</span> {lunarInfo.avoid.join(' · ')}
+            <span className="text-[10px] bg-red-500 text-white rounded hover:bg-red-600" style={{padding: '1.5px 3px'}}>忌</span> {lunarInfo.avoid.join(' · ')}
           </div>
         </div>
       )}

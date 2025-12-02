@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import ClockCard from '@/components/workspace/ClockCard';
 import TodoCard from '@/components/workspace/TodoCard';
-import TranslatorCard from '@/components/workspace/TranslatorCard';
 import MusicCard from '@/components/workspace/MusicCard';
 import NotesCard from '@/components/workspace/NotesCard';
 import QuickLinksCard from '@/components/workspace/QuickLinksCard';
@@ -22,7 +21,7 @@ export default function WorkspacePage() {
       {/* 主题切换按钮 */}
       <button
         onClick={() => setIsDark(!isDark)}
-        className={`fixed top-2 right-2 z-50 w-6 h-6 rounded text-xs ${
+        className={`fixed bottom-2 right-2 z-50 w-6 h-6 rounded text-xs ${
           isDark ? 'bg-gray-800 text-yellow-400' : 'bg-white text-gray-700 shadow'
         }`}
       >
@@ -35,9 +34,14 @@ export default function WorkspacePage() {
         <TodoCard isDark={isDark} />
         <QuickLinksCard isDark={isDark} />
         <MusicCard isDark={isDark} />
-        <TranslatorCard isDark={isDark} />
         
-        {/* 预留卡片 - 与倒计时互换 */}
+        {/* 预留卡片 */}
+        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} flex items-center justify-center`}>
+          <span className={`text-[10px] ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
+            预留
+          </span>
+        </div>
+        
         <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} flex items-center justify-center`}>
           <span className={`text-[10px] ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
             预留

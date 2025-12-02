@@ -150,7 +150,7 @@ export default function NotesCard({ isDark }: NotesCardProps) {
             onClick={addNote} 
             className="px-3 py-1 text-[11px] bg-blue-500 text-white rounded hover:bg-blue-600"
           >
-            +
+            添加
           </button>
         </div>
       </div>

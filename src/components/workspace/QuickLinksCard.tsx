@@ -44,13 +44,14 @@ export default function QuickLinksCard({ isDark }: QuickLinksCardProps) {
     <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-2 flex flex-col h-full`}>
       <div className="flex justify-between items-center mb-2">
         <span className={`text-xs font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
-          快速链接
+          链接
         </span>
         <button
           onClick={() => setIsAdding(!isAdding)}
           className="px-2 py-0.5 text-[11px] bg-blue-500 text-white rounded"
+          title={isAdding ? '取消' : '添加链接'}
         >
-          {isAdding ? '×' : '+'}
+          {isAdding ? '×' : '添加'}
         </button>
       </div>
 
@@ -82,24 +83,24 @@ export default function QuickLinksCard({ isDark }: QuickLinksCardProps) {
         {links.map(link => (
           <div
             key={link.id}
-            className={`group flex items-start gap-2 px-2 py-1 rounded ${
+            className={`group flex items-start rounded ${
               isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
             }`}
           >
             <div className="flex-1 min-w-0">
               <div
                 onClick={() => window.open(link.url, '_blank')}
-                className={`text-[11px] cursor-pointer ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline`}
+                className={`text-[12px] cursor-pointer ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline`}
               >
-                {link.name}
-              </div>
-              <div className={`text-[9px] truncate ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                {link.url}
+                {link.url}  
+                <span className={`text-[12px] ml-1 float-right truncate ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                    {link.name}
+                </span>
               </div>
             </div>
             <button
               onClick={() => setLinks(links.filter(l => l.id !== link.id))}
-              className="text-red-500 text-[11px] opacity-0 group-hover:opacity-100 flex-shrink-0"
+              className="text-red-500 ml-1 text-[11px] opacity-0 group-hover:opacity-100 flex-shrink-0"
             >
               ×
             </button>
