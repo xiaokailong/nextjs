@@ -62,8 +62,13 @@ export default function TodoCard({ isDark }: TodoCardProps) {
   };
 
   const saveEdit = () => {
-    if (editText.trim() && editingId) {
-      setTodos(todos.map(t => t.id === editingId ? { ...t, text: editText } : t));
+    if (editingId) {
+      if (editText.trim()) {
+        setTodos(todos.map(t => t.id === editingId ? { ...t, text: editText } : t));
+      } else {
+        // 清空内容即为删除
+        setTodos(todos.filter(t => t.id !== editingId));
+      }
       setEditingId(null);
       setEditText('');
     }
@@ -93,7 +98,7 @@ export default function TodoCard({ isDark }: TodoCardProps) {
       {/* 标题栏 */}
       <div className="flex justify-between items-center mb-2">
         <span className={`text-xs font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
-          待办
+          {/* 待办 */}
         </span>
         <button
           onClick={() => setShowHistory(!showHistory)}
@@ -153,20 +158,12 @@ export default function TodoCard({ isDark }: TodoCardProps) {
                   >
                     {todo.text}
                   </span>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100">
-                    <button
-                      onClick={() => startEdit(todo)}
-                      className="text-blue-500 hover:text-blue-600"
-                    >
-                      ✎
-                    </button>
-                    <button
-                      onClick={() => deleteTodo(todo.id)}
-                      className="text-red-500 hover:text-red-600"
-                    >
-                      ×
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => startEdit(todo)}
+                    className="text-blue-500 hover:text-blue-600 opacity-0 group-hover:opacity-100"
+                  >
+                    ✎
+                  </button>
                 </>
               )}
             </div>

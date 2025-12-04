@@ -8,9 +8,11 @@ import NotesCard from '@/components/workspace/NotesCard';
 import QuickLinksCard from '@/components/workspace/QuickLinksCard';
 import TimerCard from '@/components/workspace/TimerCard';
 import CalendarCard from '@/components/workspace/CalendarCard';
+import DailyQuoteCard from '@/components/workspace/DailyQuoteCard';
+import SearchCard from '@/components/workspace/SearchCard';
 
 export default function WorkspacePage() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   return (
     <div 
@@ -32,25 +34,13 @@ export default function WorkspacePage() {
       <div className="h-full w-full grid grid-rows-3 gap-[1px]" style={{ gridTemplateColumns: '1fr 2fr 1fr', backgroundColor: isDark ? '#374151' : '#e5e7eb' }}>
         <ClockCard isDark={isDark} />
         <TodoCard isDark={isDark} />
-        <QuickLinksCard isDark={isDark} />
-        <MusicCard isDark={isDark} />
-        
-        {/* 预留卡片 */}
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} flex items-center justify-center`}>
-          <span className={`text-[10px] ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-            预留
-          </span>
-        </div>
-        
-        <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} flex items-center justify-center`}>
-          <span className={`text-[10px] ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>
-            预留
-          </span>
-        </div>
-        
         <TimerCard isDark={isDark} />
-        <NotesCard isDark={isDark} />
+        <QuickLinksCard isDark={isDark} />
+        <SearchCard isDark={isDark} />
+        <DailyQuoteCard isDark={isDark} />
         <CalendarCard isDark={isDark} />
+        <NotesCard isDark={isDark} />
+        <MusicCard isDark={isDark} />
       </div>
     </div>
   );

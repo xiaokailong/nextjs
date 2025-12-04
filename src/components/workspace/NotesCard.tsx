@@ -26,6 +26,10 @@ function NoteItem({ note, index, isDark, onUpdate, onDelete }: {
     if (editText.trim()) {
       onUpdate(note.id, editText.trim());
       setIsEditing(false);
+    } else {
+      // 清空内容即为删除
+      onDelete(note.id);
+      setIsEditing(false);
     }
   };
 
@@ -66,12 +70,6 @@ function NoteItem({ note, index, isDark, onUpdate, onDelete }: {
           >
             ✎
           </button>
-          <button
-            onClick={() => onDelete(note.id)}
-            className="opacity-0 group-hover:opacity-100 text-red-500 text-xs px-1"
-          >
-            ×
-          </button>
         </>
       )}
     </div>
@@ -107,7 +105,7 @@ export default function NotesCard({ isDark }: NotesCardProps) {
     <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-2 flex flex-col h-full`}>
       <div className="flex justify-between items-center mb-2">
         <span className={`text-xs font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
-          例句
+          {/* 例句 */}
         </span>
       </div>
 

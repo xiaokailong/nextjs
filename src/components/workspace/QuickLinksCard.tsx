@@ -22,6 +22,8 @@ export default function QuickLinksCard({ isDark }: QuickLinksCardProps) {
   ]);
   const [isAdding, setIsAdding] = useState(false);
   const [newLink, setNewLink] = useState({ name: '', url: '', icon: '' });
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editLink, setEditLink] = useState({ name: '', url: '' });
 
   useEffect(() => {
     const saved = localStorage.getItem('workspace-links');
@@ -38,6 +40,29 @@ export default function QuickLinksCard({ isDark }: QuickLinksCardProps) {
       setNewLink({ name: '', url: '', icon: '' });
       setIsAdding(false);
     }
+  };
+
+  const startEdit = (link: Link) => {
+    setEditingId(link.id);
+    setEditLink({ name: link.name, url: link.url });
+  };
+
+  const saveEdit = () => {
+    if (editingId) {
+      if (editLink.name.trim() && editLink.url.trim()) {
+        setLinks(links.map(l => l.id === editingId ? { ...l, name: editLink.name, url: editLink.url } : l));
+      } else {
+        // 清空内容即为删除
+        setLinks(links.filter(l => l.id !== editingId));
+      }
+      setEditingId(null);
+      setEditLink({ name: '', url: '' });
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditLink({ name: '', url: '' });
   };
 
   return (
@@ -83,27 +108,50 @@ export default function QuickLinksCard({ isDark }: QuickLinksCardProps) {
         {links.map(link => (
           <div
             key={link.id}
-            className={`group flex items-start rounded ${
+            className={`group flex items-center gap-1 rounded p-1 ${
               isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
             }`}
           >
-            <div className="flex-1 min-w-0">
-              <div
-                onClick={() => window.open(link.url, '_blank')}
-                className={`text-[12px] cursor-pointer ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline`}
-              >
-                {link.url}  
-                <span className={`text-[12px] ml-1 float-right truncate ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                    {link.name}
-                </span>
+            {editingId === link.id ? (
+              <div className="flex-1 flex flex-col gap-1">
+                <input
+                  value={editLink.name}
+                  onChange={(e) => setEditLink({ ...editLink, name: e.target.value })}
+                  placeholder="名称"
+                  className={`px-1.5 py-0.5 text-[11px] rounded border ${isDark ? 'bg-gray-600 border-gray-500 text-gray-200' : 'bg-white border-gray-300'}`}
+                />
+                <input
+                  value={editLink.url}
+                  onChange={(e) => setEditLink({ ...editLink, url: e.target.value })}
+                  placeholder="URL"
+                  className={`px-1.5 py-0.5 text-[11px] rounded border ${isDark ? 'bg-gray-600 border-gray-500 text-gray-200' : 'bg-white border-gray-300'}`}
+                />
+                <div className="flex gap-1">
+                  <button onClick={saveEdit} className="text-green-500 text-xs px-1">✓</button>
+                  <button onClick={cancelEdit} className="text-red-500 text-xs px-1">×</button>
+                </div>
               </div>
-            </div>
-            <button
-              onClick={() => setLinks(links.filter(l => l.id !== link.id))}
-              className="text-red-500 ml-1 text-[11px] opacity-0 group-hover:opacity-100 flex-shrink-0"
-            >
-              ×
-            </button>
+            ) : (
+              <>
+                <div className="flex-1 min-w-0">
+                  <div
+                    onClick={() => window.open(link.url, '_blank')}
+                    className={`text-[12px] cursor-pointer ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline truncate`}
+                  >
+                    {link.url}
+                    <span className={`text-[12px] truncate ${isDark ? 'text-gray-500' : 'text-gray-400'}`} style={{float: 'right'}}>
+                        {link.name}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => startEdit(link)}
+                  className="text-blue-500 text-xs opacity-0 group-hover:opacity-100 flex-shrink-0"
+                >
+                  ✎
+                </button>
+              </>
+            )}
           </div>
         ))}
       </div>
